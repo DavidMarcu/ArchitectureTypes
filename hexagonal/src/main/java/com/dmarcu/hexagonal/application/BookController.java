@@ -1,25 +1,23 @@
 package com.dmarcu.hexagonal.application;
 
-import com.dmarcu.hexagonal.domain.Book;
-import com.dmarcu.hexagonal.domain.BookRepository;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.dmarcu.hexagonal.domain.ports.BookServicePort;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/book")
 public class BookController {
 
-    private BookRepository bookRepository;
+    private BookServicePort bookService;
 
     @Autowired
-    public BookController(BookRepository bookRepository){
-        this.bookRepository = bookRepository;
+    public BookController(BookServicePort bookServicePort){
+        bookService = bookServicePort;
     }
 
     @GetMapping(value = "{isbn}")
@@ -28,10 +26,8 @@ public class BookController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addBook(@RequestBody String book) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        Book bookObject = objectMapper.readValue(book, Book.class);
-        bookRepository.addBook(bookObject);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<AddBookResponse> addBook(@Valid @RequestBody AddBookRequest bookRequest) throws JsonProcessingException {
+        String bookIsbnAdded = bookService.addBook(bookRequest);
+        return new ResponseEntity<>(new AddBookResponse(bookIsbnAdded), HttpStatus.CREATED);
     }
 }
