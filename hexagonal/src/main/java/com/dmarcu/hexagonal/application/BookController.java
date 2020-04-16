@@ -20,9 +20,19 @@ public class BookController {
         bookService = bookServicePort;
     }
 
-    @GetMapping(value = "{isbn}")
-    public void getBooks(@PathVariable String isbn){
+    @GetMapping(value = "isbn/{isbn}")
+    public String getBookByIsbn(@PathVariable String isbn){
+        return bookService.addBookByIsbn(isbn);
+    }
 
+    @GetMapping(value = "title/{title}")
+    public String getBookByTitle(@PathVariable String title){
+        return bookService.addBookByTitle(title);
+    }
+
+    @GetMapping(value = "author/{author}")
+    public String getBookByAuthor(@PathVariable String author){
+        return bookService.addBookByAuthor(author);
     }
 
     @PostMapping
