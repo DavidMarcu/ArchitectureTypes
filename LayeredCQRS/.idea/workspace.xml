@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="9c869759-8ca6-42d1-a97f-e475490d2bff" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../hexagonal/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hexagonal/.mvn/wrapper/MavenWrapperDownloader.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hexagonal/.mvn/wrapper/maven-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hexagonal/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hexagonal/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hexagonal/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hexagonal/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hexagonal/src/main/java/com/dmarcu/hexagonal/HexagonalApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hexagonal/src/main/java/com/dmarcu/hexagonal/application/AddBookRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hexagonal/src/main/java/com/dmarcu/hexagonal/application/AddBookResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hexagonal/src/main/java/com/dmarcu/hexagonal/application/BookController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hexagonal/src/main/java/com/dmarcu/hexagonal/domain/Book.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hexagonal/src/main/java/com/dmarcu/hexagonal/domain/RepositoryException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hexagonal/src/main/java/com/dmarcu/hexagonal/domain/adapters/BookRepositoryAdapter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hexagonal/src/main/java/com/dmarcu/hexagonal/domain/adapters/BookServiceAdapter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hexagonal/src/main/java/com/dmarcu/hexagonal/domain/ports/BookRepositoryPort.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hexagonal/src/main/java/com/dmarcu/hexagonal/domain/ports/BookServicePort.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hexagonal/src/main/java/com/dmarcu/hexagonal/infrastructure/GoogleApiWebClient.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hexagonal/src/main/java/com/dmarcu/hexagonal/infrastructure/NotBlankListElements.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hexagonal/src/main/java/com/dmarcu/hexagonal/infrastructure/NotBlankListValidator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hexagonal/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hexagonal/src/test/java/com/dmarcu/hexagonal/HexagonalApplicationTests.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="1acPDqddNWTvHNx9l9FrH1Qj2Vn" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9c869759-8ca6-42d1-a97f-e475490d2bff" name="Default Changelist" comment="" />
+      <created>1587031791324</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1587031791324</updated>
+      <workItem from="1587031795838" duration="324000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
+  </component>
+</project>
