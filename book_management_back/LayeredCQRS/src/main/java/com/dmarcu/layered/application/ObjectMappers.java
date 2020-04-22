@@ -13,10 +13,7 @@ public class ObjectMappers {
         bookConverted.setTitle(bookReadDto.getTitle());
         bookConverted.setAuthors(Arrays.asList(bookReadDto.getAuthors().split(", ")));
         bookConverted.setCoverImagePath(bookReadDto.getCoverImage());
-        String shortDescription = bookReadDto.getDescription().length() > 100 ?
-                bookReadDto.getDescription().substring(0, 100) + "..." :
-                bookReadDto.getDescription();
-        bookConverted.setShortDescription(shortDescription);
+        bookConverted.setDescription(bookReadDto.getDescription());
         return bookConverted;
     }
 }

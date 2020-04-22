@@ -11,5 +11,5 @@ public class BookDisplay {
     private String title;
     private List<String> authors;
     private String coverImagePath;
-    private String shortDescription;
+    private String description;
 }

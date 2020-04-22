@@ -2,6 +2,7 @@ package com.dmarcu.layered.presentaion;
 
 import com.dmarcu.layered.application.read.BookDisplay;
 import com.dmarcu.layered.application.read.BookReadService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,6 @@ public class BookController {
 
     @GetMapping
     public ResponseEntity<List<BookDisplay>> getAllBooks() {
-        return ResponseEntity.ok(bookQueries.fetchAll());
+        return new ResponseEntity<>(bookQueries.fetchAll(), HttpStatus.OK);
     }
 }
