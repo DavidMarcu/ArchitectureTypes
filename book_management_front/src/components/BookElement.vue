@@ -2,19 +2,20 @@
   <div>
     <router-link class="bookCardLink" v-bind:to="{name: 'bookDetail'}">
     <b-card
-      title="Card Title"
-      img-src="https://picsum.photos/600/300/?image=25"
-      img-alt="Image"
+      v-bind:title="bookTitle"
+      title-tag="h3"
+      v-bind:sub-title="authors.toString()"
+      v-bind:img-src="imgSrc"
+      img-alt="book cover"
       img-top
+      img-height="400px"
       tag="article"
-      style="max-width: 20rem;"
+      style="max-width: 20rem; height: 800px"
       class="mb-2 bookCard"
     >
       <b-card-text>
-        Some quick example text to build on the card title and make up the bulk of the card's content.
+        {{shortBookDescription}}
       </b-card-text>
-
-      <!-- <b-button href="#" variant="primary">Go somewhere</b-button> -->
     </b-card>
     </router-link>
   </div>
@@ -22,7 +23,21 @@
 
 <script>
   export default {
-    
+    props: {
+      imgSrc: {
+        type: String,
+        default: "https://picsum.photos/600/300/?image=25"
+      },
+      bookTitle: String,
+      bookDescription: String,
+      authors: Array
+    },
+    computed: {
+      shortBookDescription() {
+        let bookDescription = this.bookDescription
+        return bookDescription.length > 200 ? bookDescription.substring(0, 201) + "..." : bookDescription
+      }
+    }
   }
 </script>
 
@@ -38,4 +53,5 @@
   transform: scale(1.01);
   box-shadow: 0 3px 12px 0 rgba(0, 0, 0, 0.2), 0 1px 15px 0 rgba(0, 0, 0, 0.19);
 }
+
 </style>
