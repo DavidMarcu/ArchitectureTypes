@@ -1,4 +1,4 @@
-package com.dmarcu.layered.infrastructure;
+package com.dmarcu.layered.domain;
 
 import com.dmarcu.layered.domain.BookReadDto;
 

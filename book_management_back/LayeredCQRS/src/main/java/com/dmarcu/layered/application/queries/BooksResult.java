@@ -1,11 +1,11 @@
-package com.dmarcu.layered.application.read;
+package com.dmarcu.layered.application.queries;
 
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class BookDisplay {
+public class BooksResult {
 
     private String isbn;
     private String title;

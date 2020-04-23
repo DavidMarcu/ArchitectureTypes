@@ -1,12 +1,11 @@
 package com.dmarcu.layered.presentaion;
 
-import com.dmarcu.layered.application.read.BookDisplay;
-import com.dmarcu.layered.application.read.BookReadService;
+import com.dmarcu.layered.application.Bus;
+import com.dmarcu.layered.application.queries.BooksQuery;
+import com.dmarcu.layered.application.queries.BooksResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -14,14 +13,19 @@ import java.util.List;
 @RequestMapping("/books")
 public class BookController {
 
-    private final BookReadService bookQueries;
+    private final Bus applicationBus;
 
-    public BookController(BookReadService bookReadService){
-        bookQueries = bookReadService;
+    public BookController(Bus applicationBus){
+        this.applicationBus = applicationBus;
     }
 
     @GetMapping
-    public ResponseEntity<List<BookDisplay>> getAllBooks() {
-        return new ResponseEntity<>(bookQueries.fetchAll(), HttpStatus.OK);
+    public ResponseEntity<List<BooksResult>> getAllBooks() {
+        return new ResponseEntity<>(applicationBus.executeQuery(new BooksQuery()), HttpStatus.OK);
     }
+
+//    @PostMapping("/book")
+//    public ResponseEntity<String> insertBook(@RequestBody String) {
+//
+//    }
 }

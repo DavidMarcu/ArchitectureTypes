@@ -1,6 +1,7 @@
 package com.dmarcu.layered.infrastructure;
 
 import com.dmarcu.layered.domain.BookReadDto;
+import com.dmarcu.layered.domain.BookRepository;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class BookRepositoryImpl implements BookRepository{
+public class BookRepositoryImpl implements BookRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
