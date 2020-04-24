@@ -10,18 +10,16 @@ import org.springframework.stereotype.Service;
 public class CreateBookHandler implements CommandHandler<CreateBookResult, CreateBookCommand> {
 
     private final BookRepository bookRepository;
-    private final ImageHelper imageHelper;
+    private final ObjectMappers objectMapper;
 
-    public CreateBookHandler(BookRepository bookRepository, ImageHelper imageHelper) {
+    public CreateBookHandler(BookRepository bookRepository, ObjectMappers objectMapper) {
         this.bookRepository = bookRepository;
-        this.imageHelper = imageHelper;
+        this.objectMapper = objectMapper;
     }
 
     @Override
     public CreateBookResult handle(CreateBookCommand command) {
-        String imagePath = imageHelper.uploadImage(command.getCoverImageType(), command.getCoverImage());
-        Book book = ObjectMappers.convert(command);
-        book.setCoverImagePath(imagePath);
+        Book book = objectMapper.convert(command);
         bookRepository.add(book);
         return new CreateBookResult(book.getIsbn());
     }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Base64;
 
 @Component
 public class ImageHelper {
@@ -33,5 +34,21 @@ public class ImageHelper {
             throw new ApplicationException();
         }
         return imagePath;
+    }
+
+    /**
+     * Method to get the image bytes from given path
+     * @param imagePath the image location
+     * @return the image as a byte array
+     */
+    public byte[] getImageFromPath(String imagePath) {
+        byte[] imageBytes;
+        try {
+            imageBytes = Base64.getEncoder().encode(FileUtils.readFileToByteArray(new File(imagePath)));
+        } catch (IOException e) {
+            LOGGER.error("There was an error reading image from file: " + e.getMessage());
+            throw new ApplicationException();
+        }
+        return imageBytes;
     }
 }

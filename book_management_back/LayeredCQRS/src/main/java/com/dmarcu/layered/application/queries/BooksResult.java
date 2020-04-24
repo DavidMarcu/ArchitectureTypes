@@ -10,6 +10,6 @@ public class BooksResult {
     private String isbn;
     private String title;
     private List<String> authors;
-    private String coverImagePath;
+    private byte[] coverImage;
     private String description;
 }
