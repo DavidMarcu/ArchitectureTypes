@@ -1,9 +1,11 @@
 package com.dmarcu.layered.domain;
 
-import lombok.Data;
-import lombok.NonNull;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Book {
 
     @NonNull
@@ -12,9 +14,12 @@ public class Book {
     private String title;
     @NonNull
     private String authors;
+    private String description;
     private short yearPublished;
     private byte editionNumber;
     private String coverImagePath;
-    private byte rating;
-    private String review;
+
+    public void uploadCoverImage(byte[] imageBytes) {
+
+    }
 }
