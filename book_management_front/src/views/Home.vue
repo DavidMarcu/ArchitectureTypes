@@ -4,7 +4,8 @@
       <b-row cols="5">
         <b-col v-for="book in books" v-bind:key="book.isbn">
           <BookElement
-            v-bind:img-src="book.coverImagePath"
+            v-bind:img-src="book.coverImage"
+            v-bind:img-type="book.coverImageType"
             v-bind:book-title="book.title"
             v-bind:book-description="book.description"
             v-bind:authors="book.authors"

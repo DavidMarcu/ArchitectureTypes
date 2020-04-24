@@ -5,7 +5,7 @@
       v-bind:title="bookTitle"
       title-tag="h3"
       v-bind:sub-title="authors.toString()"
-      v-bind:img-src="imgSrc"
+      v-bind:img-src="imageSource"
       img-alt="book cover"
       img-top
       img-height="400px"
@@ -28,6 +28,7 @@
         type: String,
         default: "https://picsum.photos/600/300/?image=25"
       },
+      imgType: String,
       bookTitle: String,
       bookDescription: String,
       authors: Array
@@ -35,7 +36,13 @@
     computed: {
       shortBookDescription() {
         let bookDescription = this.bookDescription
-        return bookDescription.length > 200 ? bookDescription.substring(0, 201) + "..." : bookDescription
+        if(bookDescription != null) {
+          return bookDescription.length > 200 ? bookDescription.substring(0, 201) + "..." : bookDescription
+        }
+        return ""
+      },
+      imageSource() {
+        return `data:image/${this.imgType};base64,${this.imgSrc}`
       }
     }
   }

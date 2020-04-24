@@ -1,6 +1,7 @@
 package com.dmarcu.layered.application;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Base64;
 
 @Component
@@ -41,14 +44,28 @@ public class ImageHelper {
      * @param imagePath the image location
      * @return the image as a byte array
      */
-    public byte[] getImageFromPath(String imagePath) {
-        byte[] imageBytes;
+    public String getImageFromPath(String imagePath) {
+        String imageAsString;
         try {
-            imageBytes = Base64.getEncoder().encode(FileUtils.readFileToByteArray(new File(imagePath)));
+            URL url = getURL(imagePath);
+            byte[] imageBytes; imageBytes = url != null
+                    ? IOUtils.toByteArray(url)
+                    : FileUtils.readFileToByteArray(new File(imagePath));
+            imageAsString = Base64.getEncoder().encodeToString(imageBytes);
         } catch (IOException e) {
-            LOGGER.error("There was an error reading image from file: " + e.getMessage());
+            LOGGER.error("There was an error reading image from file/url: " + e.getMessage());
             throw new ApplicationException();
         }
-        return imageBytes;
+        return imageAsString;
+    }
+
+    private URL getURL(String urlString) {
+        URL url;
+        try {
+            url = new URL(urlString);
+        } catch (MalformedURLException e) {
+            url = null;
+        }
+        return url;
     }
 }

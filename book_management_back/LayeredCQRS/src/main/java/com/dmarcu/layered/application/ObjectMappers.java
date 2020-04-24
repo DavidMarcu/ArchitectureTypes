@@ -23,6 +23,8 @@ public class ObjectMappers {
         bookConverted.setTitle(bookReadDto.getTitle());
         bookConverted.setAuthors(Arrays.asList(bookReadDto.getAuthors().split(", ")));
         bookConverted.setDescription(bookReadDto.getDescription());
+        String[] splittedFilename = bookReadDto.getCoverImage().split("\\.");
+        bookConverted.setCoverImageType(splittedFilename[splittedFilename.length - 1]);
         bookConverted.setCoverImage(imageHelper.getImageFromPath(bookReadDto.getCoverImage()));
         return bookConverted;
     }
