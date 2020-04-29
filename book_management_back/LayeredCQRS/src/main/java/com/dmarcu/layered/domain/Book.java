@@ -19,7 +19,4 @@ public class Book {
     private byte editionNumber;
     private String coverImagePath;
 
-    public void uploadCoverImage(byte[] imageBytes) {
-
-    }
 }

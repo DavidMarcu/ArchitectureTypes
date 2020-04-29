@@ -1,4 +1,4 @@
-# book_management_front
+# milib
 
 ## Project setup
 ```

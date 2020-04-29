@@ -16,12 +16,12 @@ export default new Vuex.Store({
   actions: {
     fetchBooks(context) {
       bookService.getAllBooks()
-        .then(response => {
-          context.commit('SET_BOOKS', response.data)
-      })
-        .catch(error => {
-          console.log("Error on get request: " + error)
-        })
+          .then(response => {
+            context.commit('SET_BOOKS', response.data)
+          })
+          .catch(error => {
+            console.log("Error on get request: " + error)
+          })
     }
   },
   modules: {
