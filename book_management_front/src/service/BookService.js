@@ -11,6 +11,9 @@ const apiClient = axios.create({
 const bookService = {
     getAllBooks() {
         return apiClient.get('/')
+    },
+    insertBook(book) {
+        return apiClient.post('/book', book)
     }
 }
 

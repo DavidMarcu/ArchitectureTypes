@@ -22,6 +22,11 @@ export default new Vuex.Store({
           .catch(error => {
             console.log("Error on get request: " + error)
           })
+    },
+    insertBook(context, book) {
+      bookService.insertBook(book)
+          .then(() => context.dispatch('fetchBooks'))
+          .catch(error => console.log("Error on post request: " + error))
     }
   },
   modules: {

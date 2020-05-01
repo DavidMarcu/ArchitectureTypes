@@ -14,6 +14,7 @@ public class CORSFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         var httpServletResponse = (HttpServletResponse) servletResponse;
         httpServletResponse.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "http://localhost:8081");
+        httpServletResponse.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "content-type");
         httpServletResponse.addHeader(HttpHeaders.VARY, "Origin");
         filterChain.doFilter(servletRequest, servletResponse);
     }
