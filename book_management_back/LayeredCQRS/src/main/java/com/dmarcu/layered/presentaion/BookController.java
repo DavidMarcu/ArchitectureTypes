@@ -1,8 +1,8 @@
 package com.dmarcu.layered.presentaion;
 
 import com.dmarcu.layered.application.Bus;
-import com.dmarcu.layered.application.commands.CreateBookCommand;
-import com.dmarcu.layered.application.commands.CreateBookResult;
+import com.dmarcu.layered.application.commands.book.CreateBookCommand;
+import com.dmarcu.layered.application.commands.book.CreateBookResult;
 import com.dmarcu.layered.application.queries.BooksQuery;
 import com.dmarcu.layered.application.queries.BooksResult;
 import org.springframework.http.HttpStatus;

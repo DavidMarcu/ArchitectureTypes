@@ -1,10 +1,10 @@
-package com.dmarcu.layered.application.commands;
+package com.dmarcu.layered.application.commands.book;
 
+import com.dmarcu.layered.application.commands.Command;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import java.util.List;
 
 @Data

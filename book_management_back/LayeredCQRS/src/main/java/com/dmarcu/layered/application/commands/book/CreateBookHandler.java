@@ -1,7 +1,7 @@
-package com.dmarcu.layered.application.commands;
+package com.dmarcu.layered.application.commands.book;
 
-import com.dmarcu.layered.application.ImageHelper;
 import com.dmarcu.layered.application.ObjectMappers;
+import com.dmarcu.layered.application.commands.CommandHandler;
 import com.dmarcu.layered.domain.Book;
 import com.dmarcu.layered.domain.BookRepository;
 import org.springframework.stereotype.Service;
