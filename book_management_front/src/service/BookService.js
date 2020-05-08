@@ -1,19 +1,14 @@
-import axios from 'axios';
+import apiClient from './ApiClient.js';
+// import store from "../store";
 
-const apiClient = axios.create({
-    baseURL: 'http://localhost:9001/books',
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    }
-})
+const headerConfig = {headers: {'Authorization': localStorage.getItem("auth")}}
 
 const bookService = {
     getAllBooks() {
-        return apiClient.get('/')
+        return apiClient.get('/', headerConfig)
     },
     insertBook(book) {
-        return apiClient.post('/book', book)
+        return apiClient.post('/book', book, headerConfig)
     }
 }
 

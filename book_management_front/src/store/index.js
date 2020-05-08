@@ -1,16 +1,21 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import bookService from '@/service/BookService.js';
+import userService from "../service/UserService";
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   state: {
-    books: []
+    books: [],
+    userAuthorization: null
   },
   mutations: {
     SET_BOOKS(state, books) {
       state.books = books
+    },
+    SET_AUTHORIZATION(state, authentication) {
+      state.userAuthorization = authentication
     }
   },
   actions: {
@@ -27,8 +32,23 @@ export default new Vuex.Store({
       bookService.insertBook(book)
           .then(() => context.dispatch('fetchBooks'))
           .catch(error => console.log("Error on post request: " + error))
+    },
+    loginUser(context, user) {
+      userService.login(user)
+          .then(response => context.commit('SET_AUTHORIZATION', response.data))
+          .catch(error => console.log(error.message))
+    }
+  },
+  getters: {
+    isLoggedIn(state) {
+      return state.userAuthorization !== null
+    },
+    getAuthHeader(state) {
+      return state.userAuthorization
     }
   },
   modules: {
   }
 })
+
+export default store

@@ -7,10 +7,11 @@ import Blog from '@/components/Blog'
 import Post from '@/components/Post'
 import Cart from '@/components/Cart'
 import Layout from '@/components/Layout'
+import LoginForm from "../components/LoginForm";
+import store from '../store/index.js';
 
 Vue.use(Router)
-
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
@@ -19,12 +20,18 @@ export default new Router({
         {
           path:'/',
           component:Home,
-          name:'Home'
+          name:'Home',
+          meta: {
+            requiresAuth: true
+          }
         },
         {
           path:'/shop',
           component:Shop,
-          name:'Shop'
+          name:'Shop',
+          meta: {
+            requiresAuth: true
+          }
         },
         {
           path:'/product',
@@ -45,12 +52,31 @@ export default new Router({
           path:'/cart',
           component:Cart,
           name:'Cart'
+        },
+        {
+          path: '/login',
+          component: LoginForm,
+          name: 'Login'
         }
       ]
 
     }
   ],
-    mode:'history'
-},
+  mode:'history'
+})
 
-  )
+router.beforeEach(((to, from, next) => {
+  if(to.matched.some(record => record.meta.requiresAuth)) {
+    if(!store.getters.isLoggedIn) {
+      next({name: 'Login'})
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+}))
+
+export default router
+
+

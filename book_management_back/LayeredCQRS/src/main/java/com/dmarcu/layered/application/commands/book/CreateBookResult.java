@@ -1,4 +1,4 @@
-package com.dmarcu.layered.application.commands;
+package com.dmarcu.layered.application.commands.book;
 
 import lombok.Data;
 
