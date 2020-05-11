@@ -12,14 +12,16 @@ const store = new Vuex.Store({
   })],
   state: {
     books: [],
-    userAuthorization: null
+    userAuthorization: {
+      authorization: null
+    },
   },
   mutations: {
     SET_BOOKS(state, books) {
       state.books = books
     },
     SET_AUTHORIZATION(state, authentication) {
-      state.userAuthorization = authentication
+      state.userAuthorization.authorization = authentication
     }
   },
   actions: {
@@ -38,17 +40,18 @@ const store = new Vuex.Store({
           .catch(error => console.log("Error on post request: " + error))
     },
     loginUser(context, user) {
+      return new Promise((resolve, reject) =>
       userService.login(user)
-          .then(response => context.commit('SET_AUTHORIZATION', response.data))
-          .catch(error => console.log(error.message))
-    }
+          .then(response => {context.commit('SET_AUTHORIZATION', response.data); resolve(response)})
+          .catch(error => { reject(error.response) })
+      )}
   },
   getters: {
     isLoggedIn(state) {
-      return state.userAuthorization !== null
+      return state.userAuthorization.authorization !== null
     },
     getAuthHeader(state) {
-      const authorization = state.userAuthorization
+      const authorization = state.userAuthorization.authorization
       return authorization !== null ? authorization.authorizationHeader : null
     }
   },

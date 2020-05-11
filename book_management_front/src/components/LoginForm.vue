@@ -27,6 +27,7 @@
                         type="password"/>
               </v-form>
             </v-card-text>
+            <span class="ml-3 red--text">{{loginError}}</span>
             <v-card-actions>
               <v-spacer/>
               <v-btn type="submit" form="user-login" color="primary">Login</v-btn>
@@ -43,17 +44,24 @@
     data() {
       return {
         username: "",
-        password: ""
+        password: "",
+        loginError: null
       }
     },
     methods: {
       async onSubmit() {
-        let user = {
-          username: this.username,
-          password: this.password
+        try {
+          let user = {
+            username: this.username,
+            password: this.password,
+          }
+          await this.$store.dispatch('loginUser', user)
+          await this.$router.push('/').then(() => location.reload())
         }
-        await this.$store.dispatch('loginUser', user)
-        await this.$router.push('/').then(() => location.reload())
+        catch (error) {
+          if(error.status === 401) this.loginError = error.data.message
+          else console.error(error)
+        }
       }
     }
   }
