@@ -41,9 +41,9 @@ const store = new Vuex.Store({
     },
     loginUser(context, user) {
       return new Promise((resolve, reject) =>
-      userService.login(user)
-          .then(response => {context.commit('SET_AUTHORIZATION', response.data); resolve(response)})
-          .catch(error => { reject(error.response) })
+        userService.login(user)
+            .then(response => {context.commit('SET_AUTHORIZATION', response.data); resolve(response)})
+            .catch(error => { reject(error.response) })
       )}
   },
   getters: {

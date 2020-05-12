@@ -26,8 +26,14 @@
                         prepend-icon="mdi-lock"
                         type="password"/>
               </v-form>
+              <div class="d-flex info-container">
+                <span class="ml-3 red--text">
+                  {{loginError}}
+                </span>
+                <router-link tag="a" :to="'/signup'" class="info--text">Create account</router-link>
+              </div>
             </v-card-text>
-            <span class="ml-3 red--text">{{loginError}}</span>
+
             <v-card-actions>
               <v-spacer/>
               <v-btn type="submit" form="user-login" color="primary">Login</v-btn>
@@ -45,7 +51,7 @@
       return {
         username: "",
         password: "",
-        loginError: null
+        loginError: ""
       }
     },
     methods: {
@@ -66,3 +72,8 @@
     }
   }
 </script>
+<style scoped>
+  .info-container {
+    justify-content: space-between;
+  }
+</style>

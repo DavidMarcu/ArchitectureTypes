@@ -21,7 +21,7 @@ public class UserController {
         this.bus = bus;
     }
 
-    @PostMapping("/sign-up")
+    @PostMapping("/signup")
     public ResponseEntity<AddUserResult> signUp(@RequestBody AddUserCommand command) {
         return new ResponseEntity<>(bus.executeCommand(command), HttpStatus.CREATED);
     }

@@ -2,12 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
 import Shop from '@/components/Shop'
-import Product from '@/components/Product'
-import Blog from '@/components/Blog'
-import Post from '@/components/Post'
-import Cart from '@/components/Cart'
 import Layout from '@/components/Layout'
-import LoginForm from "../components/LoginForm";
+import LoginForm from "@/components/LoginForm";
+import SignupForm from "@/components/SignupForm";
 import store from '../store/index.js';
 
 Vue.use(Router)
@@ -34,32 +31,16 @@ const router = new Router({
           }
         },
         {
-          path:'/product',
-          component:Product,
-          name:'Product'
-        },
-        {
-          path:'/blog',
-          component:Blog,
-          name:'Blog'
-        },
-        {
-          path:'/post',
-          component:Post,
-          name:'Post'
-        },
-        {
-          path:'/cart',
-          component:Cart,
-          name:'Cart'
-        },
-        {
           path: '/login',
           component: LoginForm,
           name: 'Login'
-        }
+        },
+        {
+          path: '/signup',
+          component: SignupForm,
+          name: 'Signup'
+        },
       ]
-
     }
   ],
   mode:'history'

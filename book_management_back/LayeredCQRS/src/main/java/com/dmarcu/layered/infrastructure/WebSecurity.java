@@ -20,7 +20,7 @@ import java.util.List;
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
-    private static final String SIGN_UP_URL = "/sign-up";
+    private static final String SIGN_UP_URL = "/signup";
     private static final String LOGIN_URL = "/login";
 
     @Value("${spring.datasource.url}")
