@@ -25,6 +25,14 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
+    public List<BookReadDto> getAllByUserId(int userId) {
+        String readQuery = "SELECT isbn, authors, title, cover_image, description FROM books " +
+                "JOIN users_books ON isbn = bookID WHERE userID = ?";
+        return jdbcTemplate.query(readQuery, new Object[]{userId},
+                new BeanPropertyRowMapper<>(BookReadDto.class));
+    }
+
+    @Override
     public void add(Book book) {
         String insertQuery = "INSERT INTO books " +
                 "(isbn, title, authors, year_published, edition_number, cover_image, description) " +

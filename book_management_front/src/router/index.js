@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
-import Shop from '@/components/Shop'
 import Layout from '@/components/Layout'
 import LoginForm from "@/components/LoginForm";
 import SignupForm from "@/components/SignupForm";
@@ -18,14 +17,6 @@ const router = new Router({
           path:'/',
           component:Home,
           name:'Home',
-          meta: {
-            requiresAuth: true
-          }
-        },
-        {
-          path:'/shop',
-          component:Shop,
-          name:'Shop',
           meta: {
             requiresAuth: true
           }

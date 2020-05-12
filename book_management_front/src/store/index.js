@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import bookService from '@/service/BookService.js';
-import userService from "../service/UserService";
+import userService from "@/service/UserService";
 import createPersistedState from 'vuex-persistedstate'
 
 Vue.use(Vuex)
@@ -12,16 +12,14 @@ const store = new Vuex.Store({
   })],
   state: {
     books: [],
-    userAuthorization: {
-      authorization: null
-    },
+    userAuthorization: null
   },
   mutations: {
     SET_BOOKS(state, books) {
       state.books = books
     },
     SET_AUTHORIZATION(state, authentication) {
-      state.userAuthorization.authorization = authentication
+      state.userAuthorization = authentication
     }
   },
   actions: {
@@ -48,11 +46,15 @@ const store = new Vuex.Store({
   },
   getters: {
     isLoggedIn(state) {
-      return state.userAuthorization.authorization !== null
+      return state.userAuthorization !== null
     },
     getAuthHeader(state) {
-      const authorization = state.userAuthorization.authorization
+      const authorization = state.userAuthorization
       return authorization !== null ? authorization.authorizationHeader : null
+    },
+    getUserId(state) {
+      const authorization = state.userAuthorization
+      return authorization !== null ? authorization.userID : null
     }
   },
   modules: {

@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class LoginUserResult {
     private String authorizationHeader;
+    private int userID;
 }

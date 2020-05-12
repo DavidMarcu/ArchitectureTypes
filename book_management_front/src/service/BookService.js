@@ -8,7 +8,7 @@ apiClient.interceptors.request.use((config) => {
 
 const bookService = {
     getAllBooks() {
-        return apiClient.get('/books/')
+        return apiClient.get(`/books/user/${store.getters.getUserId}`)
     },
     insertBook(book) {
         return apiClient.post('/books/book', book)
