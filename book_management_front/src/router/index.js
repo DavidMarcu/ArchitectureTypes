@@ -2,9 +2,10 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
 import Layout from '@/components/Layout'
-import LoginForm from "@/components/LoginForm";
-import SignupForm from "@/components/SignupForm";
-import store from '../store/index.js';
+import LoginForm from "@/components/LoginForm"
+import SignupForm from "@/components/SignupForm"
+import Book from "@/components/Book"
+import store from '../store/index.js'
 
 Vue.use(Router)
 const router = new Router({
@@ -15,8 +16,17 @@ const router = new Router({
       children:[
         {
           path:'/',
-          component:Home,
+          component: Home,
           name:'Home',
+          meta: {
+            requiresAuth: true
+          }
+        },
+        {
+          path: '/book/:isbn',
+          component: Book,
+          name: 'Book',
+          props: true,
           meta: {
             requiresAuth: true
           }

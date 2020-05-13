@@ -1,7 +1,7 @@
 package com.dmarcu.layered.application.commands.user;
 
 import com.dmarcu.layered.application.ObjectMappers;
-import com.dmarcu.layered.application.UserNotFoundException;
+import com.dmarcu.layered.application.exceptions.UserNotFoundException;
 import com.dmarcu.layered.application.commands.CommandHandler;
 import com.dmarcu.layered.domain.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -32,7 +32,7 @@ public class LoginUserHandler implements CommandHandler<LoginUserResult, LoginUs
             loginUserResult.setUserID(user.getId());
             return loginUserResult;
         } else {
-            throw new UserNotFoundException();
+            throw new UserNotFoundException("Invalid credentials");
         }
     }
 }

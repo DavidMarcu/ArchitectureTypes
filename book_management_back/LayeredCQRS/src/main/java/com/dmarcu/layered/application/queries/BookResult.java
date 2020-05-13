@@ -5,11 +5,11 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class BooksResult {
-
+public class BookResult {
     private String isbn;
     private String title;
     private List<String> authors;
     private String coverImage;
     private String coverImageType;
+    private String description;
 }

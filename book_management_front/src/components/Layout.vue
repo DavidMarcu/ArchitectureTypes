@@ -53,8 +53,7 @@
         activeBtn: 1,
         items: [
           {
-            title: "Logout",
-            route: "/shop"
+            title: "Logout"
           }]
       }
     },

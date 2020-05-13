@@ -1,6 +1,6 @@
 package com.dmarcu.layered.infrastructure;
 
-import com.dmarcu.layered.application.UserNotFoundException;
+import com.dmarcu.layered.application.exceptions.UserNotFoundException;
 import com.dmarcu.layered.domain.User;
 import com.dmarcu.layered.domain.UserRepository;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -34,7 +34,7 @@ public class UserRepositoryImpl implements UserRepository {
         String userQuery = "SELECT id, username, password FROM users WHERE username = ?";
         List<User> users = jdbcTemplate.query(userQuery, new Object[]{username}, new BeanPropertyRowMapper<>(User.class));
         if(users.isEmpty()) {
-            throw new UserNotFoundException();
+            throw new UserNotFoundException("Invalid credentials");
         }
         return users.get(0);
     }

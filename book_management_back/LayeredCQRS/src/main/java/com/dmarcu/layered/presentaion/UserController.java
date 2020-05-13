@@ -1,7 +1,7 @@
 package com.dmarcu.layered.presentaion;
 
 import com.dmarcu.layered.application.Bus;
-import com.dmarcu.layered.application.UserNotFoundException;
+import com.dmarcu.layered.application.exceptions.UserNotFoundException;
 import com.dmarcu.layered.application.commands.user.AddUserCommand;
 import com.dmarcu.layered.application.commands.user.AddUserResult;
 import com.dmarcu.layered.application.commands.user.LoginUserCommand;

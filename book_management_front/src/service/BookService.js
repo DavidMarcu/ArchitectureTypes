@@ -12,6 +12,9 @@ const bookService = {
     },
     insertBook(book) {
         return apiClient.post('/books/book', book)
+    },
+    getBookByIsbn(isbn) {
+        return apiClient.get(`books/book/${isbn}`)
     }
 }
 

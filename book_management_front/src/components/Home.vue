@@ -37,13 +37,13 @@
                         class="d-flex transition-fast-in-fast-out white darken-2 v-card--reveal display-3 white--text"
                         style="height: 100%;"
                       >
-                        <v-btn v-if="hover" href="/product" class="" outlined>VIEW</v-btn>
+                        <v-btn v-if="hover" :href="'/book/' + book.isbn" outlined>VIEW</v-btn>
                       </div>
 
                     </v-expand-transition>
                   </v-img>
                   <v-card-text class="text--primary">
-                    <div><a href="/product" style="text-decoration: none"><h3>{{book.title}}</h3></a></div>
+                    <div><a :href="'/book/' + book.isbn" style="text-decoration: none"><h3>{{book.title}}</h3></a></div>
                     <div>{{book.authors.toString()}}</div>
                   </v-card-text>
                 </v-card>
@@ -81,7 +81,6 @@
           this.$store.dispatch("fetchBooks")
       },
       data: () => ({
-            range: [0, 10000],
             select:'Title',
             options: [
                 'Rating',

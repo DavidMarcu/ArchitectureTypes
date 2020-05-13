@@ -1,5 +1,6 @@
 package com.dmarcu.layered.infrastructure;
 
+import com.dmarcu.layered.application.exceptions.BookNotFoundException;
 import com.dmarcu.layered.domain.Book;
 import com.dmarcu.layered.domain.BookReadDto;
 import com.dmarcu.layered.domain.BookRepository;
@@ -20,16 +21,28 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public List<BookReadDto> getAll() {
-        String readQuery = "SELECT isbn, authors, title, cover_image, description FROM books";
+        String readQuery = "SELECT isbn, authors, title, cover_image FROM books";
         return jdbcTemplate.query(readQuery, new BeanPropertyRowMapper<>(BookReadDto.class));
     }
 
     @Override
     public List<BookReadDto> getAllByUserId(int userId) {
-        String readQuery = "SELECT isbn, authors, title, cover_image, description FROM books " +
+        String readQuery = "SELECT isbn, authors, title, cover_image FROM books " +
                 "JOIN users_books ON isbn = bookID WHERE userID = ?";
         return jdbcTemplate.query(readQuery, new Object[]{userId},
                 new BeanPropertyRowMapper<>(BookReadDto.class));
+    }
+
+    @Override
+    public BookReadDto getByIsbn(String isbn) {
+        String readQuery = "SELECT isbn, authors, title, cover_image, description FROM books " +
+                "WHERE isbn = ?";
+         List<BookReadDto> books = jdbcTemplate.query(readQuery, new Object[]{isbn},
+                new BeanPropertyRowMapper<>(BookReadDto.class));
+         if(books.isEmpty()) {
+             throw new BookNotFoundException("Book not found");
+         }
+         return books.get(0);
     }
 
     @Override

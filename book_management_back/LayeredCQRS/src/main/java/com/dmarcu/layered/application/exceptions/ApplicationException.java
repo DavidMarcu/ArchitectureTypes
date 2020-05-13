@@ -1,4 +1,4 @@
-package com.dmarcu.layered.application;
+package com.dmarcu.layered.application.exceptions;
 
 import lombok.NoArgsConstructor;
 
