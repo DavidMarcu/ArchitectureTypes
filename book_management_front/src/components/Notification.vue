@@ -2,14 +2,19 @@
   <v-snackbar
       v-model="notification"
       bottom
-      color="success">
-    Success!!!
+      :timeout="4000"
+      :color="type">
+    <slot></slot>
+    <v-btn dark text @click="snackbar = false">
+      Close
+    </v-btn>
   </v-snackbar>
 </template>
 
 <script>
   export default {
-    name: "SuccessNotification",
+    name: "Notification",
+    props: ['type'],
     data() {
       return {
         notification: true

@@ -56,6 +56,7 @@
         </v-col>
       </v-row>
     </v-container>
+    <Notification v-if="showingNotification" type="error">{{errorText}}</Notification>
   </v-content>
 </template>
 
@@ -63,8 +64,11 @@
   /* eslint-disable no-unused-vars */
 
   import userService from "../service/UserService";
-
+  import Notification from '@/components/Notification.vue';
   export default {
+    components: {
+      Notification
+    },
     data() {
       return {
         valid: true,
@@ -84,7 +88,9 @@
         email: "",
         emailRule: [
           email => /[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/.test(email) || 'Invalid email format'
-        ]
+        ],
+        errorText: null,
+        showingNotification: false
       }
     },
     methods: {
@@ -97,7 +103,7 @@
           }
           userService.signup(user)
               .then(() => this.$router.push('/'))
-              .catch(error => console.error(error))
+              .catch(error => {this.showingNotification = true; this.errorText = error.response.data.message})
         }
       }
     }

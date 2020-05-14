@@ -1,6 +1,7 @@
 package com.dmarcu.layered.presentaion;
 
 import com.dmarcu.layered.application.Bus;
+import com.dmarcu.layered.application.exceptions.DuplicateUserException;
 import com.dmarcu.layered.application.exceptions.UserNotFoundException;
 import com.dmarcu.layered.application.commands.user.AddUserCommand;
 import com.dmarcu.layered.application.commands.user.AddUserResult;
@@ -34,5 +35,10 @@ public class UserController {
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Error> handleUserNotFoundException(UserNotFoundException exception) {
         return new ResponseEntity<>(new Error(exception.getMessage()), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(DuplicateUserException.class)
+    public ResponseEntity<Error> handleDuplicateUserException(DuplicateUserException exception) {
+        return new ResponseEntity<>(new Error(exception.getMessage()), HttpStatus.BAD_REQUEST);
     }
 }

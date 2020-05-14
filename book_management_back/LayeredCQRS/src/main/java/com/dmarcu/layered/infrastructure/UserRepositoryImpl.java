@@ -1,5 +1,6 @@
 package com.dmarcu.layered.infrastructure;
 
+import com.dmarcu.layered.application.exceptions.DuplicateUserException;
 import com.dmarcu.layered.application.exceptions.UserNotFoundException;
 import com.dmarcu.layered.domain.User;
 import com.dmarcu.layered.domain.UserRepository;
@@ -23,6 +24,12 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     @Transactional
     public void add(User user) {
+        String queryStatement = "SELECT username FROM users WHERE username = ?";
+        List<String> users = jdbcTemplate.query(queryStatement, new Object[]{user.getUsername()},
+                new BeanPropertyRowMapper<>(String.class));
+        if(!users.isEmpty()) {
+            throw new DuplicateUserException("User already exists");
+        }
         String insertStatement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
         jdbcTemplate.update(insertStatement, user.getUsername(), user.getPassword(), user.getEmail());
         insertStatement = "INSERT INTO authorities(username, authority) VALUES (?, ?)";
