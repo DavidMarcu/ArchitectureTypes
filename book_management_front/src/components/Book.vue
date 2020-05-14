@@ -19,8 +19,8 @@
             <p class="subtitle-1 font-weight-thin">
               {{book.description}}
             </p>
-            <v-btn class="primary white--text" outlined tile dense><v-icon>mdi-cart</v-icon> ADD TO CART</v-btn>
-            <v-btn class="ml-4" outlined tile>ADD TO WISHLIST</v-btn>
+            <v-btn v-if="hasBook" class="ml-4" color="error" @click="onRemove" outlined tile>REMOVE FROM MY LIBRARY</v-btn>
+            <v-btn v-else class="ml-4" @click="onAdd" outlined tile>ADD TO MY LIBRARY</v-btn>
           </div>
 
         </div>
@@ -61,7 +61,11 @@
     props: ['isbn'],
     created() {
       bookService.getBookByIsbn(this.isbn)
-          .then(response => this.book = response.data)
+          .then(response => {
+            this.book = response.data
+            const bookIsbns = this.$store.state.books.map(book => book.isbn)
+            this.hasBook = bookIsbns.includes(this.isbn)
+          })
           .catch(error => console.error(error))
     },
     data() {
@@ -76,13 +80,27 @@
             subtitle: "<span class='text--primary'>Ali Connors</span> &mdash; Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nisl tincidunt eget nullam non. Tincidunt arcu non sodales neque sodales ut etiam. Lectus arcu bibendum at varius vel pharetra. Morbi tristique senectus et netus et malesuada.\n" +
                 "\n",
           }
-        ]
+        ],
+        hasBook: false
       }
     },
     computed: {
       imageSource() {
         return this.book !== null ? `data:image/${this.book.coverImageType};base64,${this.book.coverImage}` :
             'placeholder'
+      }
+    },
+    methods: {
+      onRemove() {
+        bookService.removeBookForUser(this.book.isbn)
+          .then(() => this.$router.push('/'))
+          .catch(error => console.error(error))
+      },
+      onAdd() {
+        const bookToBeAdded = {isbn: this.book.isbn}
+        bookService.addBookForUser(bookToBeAdded)
+          .then(() => this.$router.push('/'))
+          .catch(error => console.error(error))
       }
     }
   }

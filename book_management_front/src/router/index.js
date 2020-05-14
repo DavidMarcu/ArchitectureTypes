@@ -5,6 +5,7 @@ import Layout from '@/components/Layout'
 import LoginForm from "@/components/LoginForm"
 import SignupForm from "@/components/SignupForm"
 import Book from "@/components/Book"
+import Library from '@/components/Library.vue';
 import store from '../store/index.js'
 
 Vue.use(Router)
@@ -18,6 +19,14 @@ const router = new Router({
           path:'/',
           component: Home,
           name:'Home',
+          meta: {
+            requiresAuth: true
+          }
+        },
+        {
+          path:'/books',
+          component: Library,
+          name:'Library',
           meta: {
             requiresAuth: true
           }

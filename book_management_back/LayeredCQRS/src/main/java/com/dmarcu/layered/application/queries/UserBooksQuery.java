@@ -6,5 +6,5 @@ import java.util.List;
 
 @Data
 public class UserBooksQuery implements Query<List<BooksResult>> {
-    private final int userId;
+    private final String username;
 }

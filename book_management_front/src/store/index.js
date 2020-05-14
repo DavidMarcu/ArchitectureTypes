@@ -12,25 +12,34 @@ const store = new Vuex.Store({
   })],
   state: {
     books: [],
+    allBooks: [],
     userAuthorization: null
   },
   mutations: {
     SET_BOOKS(state, books) {
       state.books = books
     },
+    SET_ALL_BOOKS(state, books) {
+      state.allBooks = books
+    },
     SET_AUTHORIZATION(state, authentication) {
       state.userAuthorization = authentication
-    }
+    },
   },
   actions: {
     fetchBooks(context) {
-      bookService.getAllBooks()
+      bookService.getBooksForUser()
           .then(response => {
             context.commit('SET_BOOKS', response.data)
           })
           .catch(error => {
             console.log("Error on get request: " + error)
           })
+    },
+    fetchAllBooks(context) {
+      bookService.getAllBooks()
+          .then(response => context.commit('SET_ALL_BOOKS', response.data))
+          .catch(error => console.log(error))
     },
     insertBook(context, book) {
       bookService.insertBook(book)
@@ -51,10 +60,6 @@ const store = new Vuex.Store({
     getAuthHeader(state) {
       const authorization = state.userAuthorization
       return authorization !== null ? authorization.authorizationHeader : null
-    },
-    getUserId(state) {
-      const authorization = state.userAuthorization
-      return authorization !== null ? authorization.userID : null
     }
   },
   modules: {

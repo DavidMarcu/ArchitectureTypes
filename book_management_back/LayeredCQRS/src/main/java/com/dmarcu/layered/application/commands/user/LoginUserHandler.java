@@ -29,7 +29,6 @@ public class LoginUserHandler implements CommandHandler<LoginUserResult, LoginUs
             String base64EncodedCredentials = Base64.getEncoder()
                     .encodeToString(credsTobeEncoded.getBytes());
             loginUserResult.setAuthorizationHeader(AUTHORIZATION_HEADER_PREFIX + base64EncodedCredentials);
-            loginUserResult.setUserID(user.getId());
             return loginUserResult;
         } else {
             throw new UserNotFoundException("Invalid credentials");

@@ -8,10 +8,7 @@
               <small>Showing 1-24 of 200 products</small>
             </v-col>
             <v-col md="4">
-              <v-btn href="/books" color="success">
-                <v-icon>mdi-book-plus</v-icon>
-                Add new book
-              </v-btn>
+              <NewBook></NewBook>
             </v-col>
             <v-col md="4">
               <v-select class="pa-0" v-model="select" :items="options" style="margin-bottom: -20px;" outlined dense></v-select>
@@ -24,21 +21,21 @@
             <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12" :key="book.isbn" v-for="book in books">
               <v-hover v-slot:default="{ hover }">
                 <v-card
-                  class="mx-auto"
-                  color="grey lighten-4"
-                  max-width="600"
+                        class="mx-auto"
+                        color="grey lighten-4"
+                        max-width="600"
                 >
                   <v-img
-                    class="white--text align-end"
-                    :aspect-ratio="16/9"
-                    height="400px"
-                    :src="imageSource(book)"
+                          class="white--text align-end"
+                          :aspect-ratio="16/9"
+                          height="400px"
+                          :src="imageSource(book)"
                   >
                     <v-expand-transition>
                       <div
-                        v-if="hover"
-                        class="d-flex transition-fast-in-fast-out white darken-2 v-card--reveal display-3 white--text"
-                        style="height: 100%;"
+                              v-if="hover"
+                              class="d-flex transition-fast-in-fast-out white darken-2 v-card--reveal display-3 white--text"
+                              style="height: 100%;"
                       >
                         <v-btn v-if="hover" :href="'/book/' + book.isbn" outlined>VIEW</v-btn>
                       </div>
@@ -55,8 +52,8 @@
           </div>
           <div class="text-center mt-12">
             <v-pagination
-              v-model="page"
-              :length="6"
+                    v-model="page"
+                    :length="6"
             ></v-pagination>
           </div>
         </div>
@@ -75,28 +72,33 @@
   }
 </style>
 <script>
-    export default {
-      created() {
-          this.$store.dispatch("fetchBooks")
-      },
-      data: () => ({
-            select:'Title',
-            options: [
-                'Rating',
-                'Title',
-                'Authors'
-            ],
-            page:1
-        }),
-      methods: {
-        imageSource(book) {
-          return `data:image/${book.coverImageType};base64,${book.coverImage}`
-        }
-      },
-      computed: {
-        books() {
-          return this.$store.state.books;
-        }
+  import NewBook from "@/components/NewBook.vue";
+
+  export default {
+    components: {
+      NewBook
+    },
+    created() {
+      this.$store.dispatch("fetchAllBooks")
+    },
+    data: () => ({
+      select:'Title',
+      options: [
+        'Rating',
+        'Title',
+        'Authors'
+      ],
+      page:1
+    }),
+    methods: {
+      imageSource(book) {
+        return `data:image/${book.coverImageType};base64,${book.coverImage}`
+      }
+    },
+    computed: {
+      books() {
+        return this.$store.state.allBooks;
       }
     }
+  }
 </script>
