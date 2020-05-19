@@ -6,19 +6,26 @@
           <v-img :aspect-ratio="0.75" :src="imageSource"></v-img>
         </div>
         <div class="col-lg-9 col-md-7 col-sm-7 col-xs-12">
-          <v-breadcrumbs class="pb-0" :items="breadcrums"></v-breadcrumbs>
+<!--          <v-breadcrumbs class="pb-0" :items="breadcrums"></v-breadcrumbs>-->
           <div class="pl-6">
             <p class="display-1 mb-0">{{book.title}}</p>
             <v-card-actions class="pa-0">
               <p class="headline font-weight-light pt-3">{{book.authors.toString()}}</p>
               <v-spacer></v-spacer>
-              <v-rating v-model="rating" class="" background-color="warning lighten-3"
+              <v-rating readonly :value="rating" half-increments background-color="warning lighten-3"
                         color="warning" dense></v-rating>
-              <span class="body-2	font-weight-thin"> 25 REVIEWS</span>
+              <span v-if="this.numberOfReviews === 1" class="body-2	font-weight-thin"> 1 REVIEW</span>
+              <span v-else class="body-2	font-weight-thin"> {{this.numberOfReviews}} REVIEWS</span>
             </v-card-actions>
             <p class="subtitle-1 font-weight-thin">
               {{book.description}}
             </p>
+
+            <ReviewModal v-show="hasBook"
+                         :rating="ownReview !== null ? ownReview.rating : 0"
+                         :review="ownReview !== null ? ownReview.review : ''"
+                         :ownership="ownReview !== null"
+                         :isbn="this.isbn"></ReviewModal>
             <v-btn v-if="hasBook" class="ml-4" color="error" @click="onRemove" outlined tile>REMOVE FROM MY LIBRARY</v-btn>
             <v-btn v-else class="ml-4" @click="onAdd" outlined tile>ADD TO MY LIBRARY</v-btn>
           </div>
@@ -30,20 +37,19 @@
           <v-tabs>
             <v-tab>REVIEWS</v-tab>
             <v-tab-item>
-              <v-list three-line="true" avatar="true">
+              <v-list :three-line="true">
                 <v-list-item-group v-model="item" color="primary">
                   <v-list-item
-                          v-for="(item, i) in items"
-                          :key="i"
-                          inactive="true"
+                          v-for="review in reviews"
+                          :key="review.reviewId"
+                          :inactive="true"
                   >
-                    <v-list-item-avatar>
-                      <v-img :src="item.avatar"></v-img>
-                    </v-list-item-avatar>
                     <v-list-item-content>
-                      <v-list-item-title v-html="item.title"></v-list-item-title><v-rating v-model="rating" class="" background-color="warning lighten-3"
-                                                                                           color="warning" dense></v-rating>
-                      <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
+                      <v-list-item-title v-html="review.username"></v-list-item-title>
+                      <v-rating readonly :value="review.rating" small
+                                background-color="warning lighten-3"
+                                color="warning" dense></v-rating>
+                      <v-list-item-subtitle v-html="review.review"></v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
                 </v-list-item-group>
@@ -57,30 +63,44 @@
 </template>
 <script>
   import bookService from '@/service/BookService.js';
+  import reviewService from '@/service/ReviewService.js';
+  import ReviewModal from '@/components/ReviewModal.vue';
   export default {
     props: ['isbn'],
+    components: {
+      ReviewModal
+    },
     created() {
       bookService.getBookByIsbn(this.isbn)
           .then(response => {
             this.book = response.data
-            const bookIsbns = this.$store.state.books.map(book => book.isbn)
-            this.hasBook = bookIsbns.includes(this.isbn)
+            this.hasBook = this.$store.getters.ownsBook(this.isbn)
           })
-          .catch(error => console.error(error))
+          .catch(error => console.error(error));
+      reviewService.getReviewsForBook(this.isbn)
+        .then(response => {
+          this.reviews = response.data.otherReviews
+          this.ownReview = response.data.ownReview
+
+          const hasOwnReview = this.ownReview !== null
+          const reducer = (acumulator, currentValue) => acumulator + currentValue
+          this.numberOfReviews = hasOwnReview ? this.reviews.length + 1 : this.reviews.length
+          const otherReviewsRatings = this.reviews.length > 0
+              ? this.reviews.map(review => review.rating).reduce(reducer)
+              : 0
+          const ratingSum = hasOwnReview ? otherReviewsRatings + this.ownReview.rating : otherReviewsRatings
+          this.rating = ratingSum / this.numberOfReviews
+        })
+        .catch(error => console.error(error))
     },
     data() {
       return {
         book: null,
         rating: 4.5,
-        item: 1,
-        items: [
-          {
-            avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-            title: 'Lorem ipsum dolor?',
-            subtitle: "<span class='text--primary'>Ali Connors</span> &mdash; Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nisl tincidunt eget nullam non. Tincidunt arcu non sodales neque sodales ut etiam. Lectus arcu bibendum at varius vel pharetra. Morbi tristique senectus et netus et malesuada.\n" +
-                "\n",
-          }
-        ],
+        item: 5,
+        reviews: [],
+        numberOfReviews: 0,
+        ownReview: null,
         hasBook: false
       }
     },

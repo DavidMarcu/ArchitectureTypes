@@ -39,10 +39,10 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User getByUsername(String username) {
         String userQuery = "SELECT id, username, password FROM users WHERE username = ?";
-        List<User> users = jdbcTemplate.query(userQuery, new Object[]{username}, new BeanPropertyRowMapper<>(User.class));
-        if(users.isEmpty()) {
+        User user = jdbcTemplate.queryForObject(userQuery, new Object[]{username}, new BeanPropertyRowMapper<>(User.class));
+        if(user == null) {
             throw new UserNotFoundException("Invalid credentials");
         }
-        return users.get(0);
+        return user;
     }
 }

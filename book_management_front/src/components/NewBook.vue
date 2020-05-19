@@ -13,7 +13,6 @@
             <span class="headline">New Book</span>
           </v-card-title>
           <v-card-text>
-
             <v-container>
               <v-row dense>
                 <v-col cols="12">

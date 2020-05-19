@@ -60,6 +60,10 @@ const store = new Vuex.Store({
     getAuthHeader(state) {
       const authorization = state.userAuthorization
       return authorization !== null ? authorization.authorizationHeader : null
+    },
+    ownsBook: state => isbn => {
+      const bookIsbns = state.books.map(book => book.isbn)
+      return bookIsbns.includes(isbn)
     }
   },
   modules: {

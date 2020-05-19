@@ -2,7 +2,7 @@ package com.dmarcu.layered.application;
 
 import com.dmarcu.layered.application.commands.user.AddUserCommand;
 import com.dmarcu.layered.application.commands.book.CreateBookCommand;
-import com.dmarcu.layered.application.queries.BooksResult;
+import com.dmarcu.layered.application.queries.books.BooksResult;
 import com.dmarcu.layered.domain.Book;
 import com.dmarcu.layered.domain.BookReadDto;
 import com.dmarcu.layered.domain.User;

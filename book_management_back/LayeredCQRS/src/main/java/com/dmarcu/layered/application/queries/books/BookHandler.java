@@ -1,6 +1,7 @@
-package com.dmarcu.layered.application.queries;
+package com.dmarcu.layered.application.queries.books;
 
 import com.dmarcu.layered.application.ImageHelper;
+import com.dmarcu.layered.application.queries.QueryHandler;
 import com.dmarcu.layered.domain.BookReadDto;
 import com.dmarcu.layered.domain.BookRepository;
 import org.springframework.stereotype.Service;

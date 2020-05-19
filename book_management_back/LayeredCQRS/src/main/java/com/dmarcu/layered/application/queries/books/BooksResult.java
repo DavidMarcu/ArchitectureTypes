@@ -1,4 +1,4 @@
-package com.dmarcu.layered.application.queries;
+package com.dmarcu.layered.application.queries.books;
 
 import lombok.Data;
 

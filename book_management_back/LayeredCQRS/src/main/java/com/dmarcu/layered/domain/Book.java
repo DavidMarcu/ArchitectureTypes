@@ -2,8 +2,7 @@ package com.dmarcu.layered.domain;
 
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Book {

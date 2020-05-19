@@ -3,7 +3,7 @@ package com.dmarcu.layered.presentaion;
 import com.dmarcu.layered.application.Bus;
 import com.dmarcu.layered.application.commands.book.*;
 import com.dmarcu.layered.application.exceptions.BookNotFoundException;
-import com.dmarcu.layered.application.queries.*;
+import com.dmarcu.layered.application.queries.books.*;
 import com.dmarcu.layered.domain.Error;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
