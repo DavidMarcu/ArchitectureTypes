@@ -5,7 +5,7 @@
         <div class="col-md-12">
           <v-row dense>
             <v-col md="4" class="pl-6 pt-6">
-              <small>Showing 1-24 of 200 products</small>
+              <small>Showing {{leftNumber}}-{{rightNumber}} of {{books.count}} books</small>
             </v-col>
             <v-col md="4">
               <NewBook></NewBook>
@@ -18,7 +18,7 @@
           <v-divider></v-divider>
 
           <div class="row text-center">
-            <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12" :key="book.isbn" v-for="book in books">
+            <div class="col-xl-2 col-md-3 col-sm-6 col-xs-12" :key="book.isbn" v-for="book in books.books">
               <v-hover v-slot:default="{ hover }">
                 <v-card
                         class="mx-auto"
@@ -53,7 +53,11 @@
           <div class="text-center mt-12">
             <v-pagination
                     v-model="page"
-                    :length="6"
+                    @next="fetchAllBooks"
+                    @previous="fetchAllBooks"
+                    @input="fetchAllBooks"
+                    :total-visible="5"
+                    :length="pageLength"
             ></v-pagination>
           </div>
         </div>
@@ -79,7 +83,7 @@
       NewBook
     },
     created() {
-      this.$store.dispatch("fetchAllBooks")
+      this.$store.dispatch("fetchAllBooks", this.page)
     },
     data: () => ({
       select:'Title',
@@ -93,11 +97,23 @@
     methods: {
       imageSource(book) {
         return `data:image/${book.coverImageType};base64,${book.coverImage}`
+      },
+      fetchAllBooks() {
+        this.$store.dispatch("fetchAllBooks", this.page)
       }
     },
     computed: {
       books() {
-        return this.$store.state.allBooks;
+        return this.$store.getters.getAllBooksObject;
+      },
+      pageLength() {
+        return this.$store.state.pageNumberAll
+      },
+      leftNumber() {
+        return (this.page - 1) * this.books.countPerPage + 1
+      },
+      rightNumber() {
+        return this.page === this.pageLength ? this.books.count : this.page * this.books.countPerPage
       }
     }
   }

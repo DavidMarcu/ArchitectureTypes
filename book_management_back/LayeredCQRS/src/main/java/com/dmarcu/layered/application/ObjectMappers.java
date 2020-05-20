@@ -26,17 +26,6 @@ public class ObjectMappers {
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
-    public BooksResult convert(BookReadDto bookReadDto) {
-        var bookConverted = new BooksResult();
-        bookConverted.setIsbn(bookReadDto.getIsbn());
-        bookConverted.setTitle(bookReadDto.getTitle());
-        bookConverted.setAuthors(Arrays.asList(bookReadDto.getAuthors().split(", ")));
-        String[] splittedFilename = bookReadDto.getCoverImage().split("\\.");
-        bookConverted.setCoverImageType(splittedFilename[splittedFilename.length - 1]);
-        bookConverted.setCoverImage(imageHelper.getImageFromPath(bookReadDto.getCoverImage()));
-        return bookConverted;
-    }
-
     public Book convert(CreateBookCommand bookCommand) {
         var book = new Book();
         book.setIsbn(bookCommand.getIsbn());
@@ -49,7 +38,7 @@ public class ObjectMappers {
         String imagePath = bookCommand.getCoverImage() != null
                 ? imageHelper.uploadImage(bookCommand.getCoverImageType(), bookCommand.getCoverImage())
                 : defaultImagePath; 
-        book.setCoverImagePath(imagePath);
+        book.setCoverImage(imagePath);
         return book;
     }
 

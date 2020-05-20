@@ -2,7 +2,6 @@ package com.dmarcu.layered.infrastructure;
 
 import com.dmarcu.layered.application.exceptions.BookNotFoundException;
 import com.dmarcu.layered.domain.Book;
-import com.dmarcu.layered.domain.BookReadDto;
 import com.dmarcu.layered.domain.BookRepository;
 import com.dmarcu.layered.domain.BookUserCongregate;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -21,29 +20,50 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
-    public List<BookReadDto> getAll() {
-        String readQuery = "SELECT isbn, authors, title, cover_image FROM books";
-        return jdbcTemplate.query(readQuery, new BeanPropertyRowMapper<>(BookReadDto.class));
+    public int getCount() {
+        String countQuery = "SELECT count(1) FROM books";
+        Integer count = jdbcTemplate.queryForObject(countQuery, Integer.class);
+        return count != null ? count : 0;
     }
 
     @Override
-    public List<BookReadDto> getAllByUserId(int userId) {
+    public List<Book> getAll(int page, int pageSize) {
+        String readQuery = "SELECT isbn, authors, title, cover_image FROM books LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(readQuery, new Object[]{pageSize, (page - 1) * pageSize}, new BeanPropertyRowMapper<>(Book.class));
+    }
+
+    @Override
+    public int getCountOfUser(int userId) {
+        String countQuery = "SELECT count(1) FROM users_books WHERE userID = ?";
+        Integer count = jdbcTemplate.queryForObject(countQuery, new Object[]{userId}, Integer.class);
+        return count != null ? count : 0;
+    }
+
+    @Override
+    public List<Book> getAllByUserId(int userId, int page, int pageSize) {
         String readQuery = "SELECT isbn, authors, title, cover_image FROM books " +
-                "JOIN users_books ON isbn = bookID WHERE userID = ?";
-        return jdbcTemplate.query(readQuery, new Object[]{userId},
-                new BeanPropertyRowMapper<>(BookReadDto.class));
+                "JOIN users_books ON isbn = bookID WHERE userID = ? LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(readQuery, new Object[]{userId, pageSize, (page - 1) * pageSize},
+                new BeanPropertyRowMapper<>(Book.class));
     }
 
     @Override
-    public BookReadDto getByIsbn(String isbn) {
+    public Book getByIsbn(String isbn) {
         String readQuery = "SELECT isbn, authors, title, cover_image, description FROM books " +
                 "WHERE isbn = ?";
-        List<BookReadDto> books = jdbcTemplate.query(readQuery, new Object[]{isbn},
-                new BeanPropertyRowMapper<>(BookReadDto.class));
+        List<Book> books = jdbcTemplate.query(readQuery, new Object[]{isbn},
+                new BeanPropertyRowMapper<>(Book.class));
         if(books.isEmpty()) {
              throw new BookNotFoundException("Book not found");
         }
         return books.get(0);
+    }
+
+    @Override
+    public int getCountOfUserByIsbn(int userId, String isbn) {
+        String countQuery = "SELECT count(1) FROM users_books WHERE userID = ? AND bookID = ?";
+        Integer count = jdbcTemplate.queryForObject(countQuery, new Object[]{userId, isbn}, Integer.class);
+        return count != null ? count : 0;
     }
 
     @Override
@@ -64,6 +84,6 @@ public class BookRepositoryImpl implements BookRepository {
                 "(isbn, title, authors, year_published, edition_number, cover_image, description) " +
                 "VALUES(?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(insertStatement, book.getIsbn(), book.getTitle(), book.getAuthors(), book.getYearPublished(),
-                book.getEditionNumber(), book.getCoverImagePath(), book.getDescription());
+                book.getEditionNumber(), book.getCoverImage(), book.getDescription());
     }
 }

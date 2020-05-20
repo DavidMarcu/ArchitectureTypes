@@ -7,11 +7,14 @@ apiClient.interceptors.request.use((config) => {
 })
 
 const bookService = {
-    getBooksForUser() {
-        return apiClient.get('/books/user')
+    getBooksForUser(page) {
+        return apiClient.get(`/books/user?page=${page}`)
     },
-    getAllBooks() {
-        return apiClient.get('/books')
+    getAllBooks(page) {
+        return apiClient.get(`/books?page=${page}`)
+    },
+    getBookOwnership(isbn) {
+      return apiClient.head(`/books/user/book/${isbn}`)
     },
     insertBook(book) {
         return apiClient.post('/books', book)

@@ -16,6 +16,6 @@ public class Book {
     private String description;
     private short yearPublished;
     private byte editionNumber;
-    private String coverImagePath;
+    private String coverImage;
 
 }

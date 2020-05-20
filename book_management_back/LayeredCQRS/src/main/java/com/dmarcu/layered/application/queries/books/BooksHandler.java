@@ -1,7 +1,9 @@
 package com.dmarcu.layered.application.queries.books;
 
-import com.dmarcu.layered.application.ObjectMappers;
+import com.dmarcu.layered.application.ImageHelper;
+import com.dmarcu.layered.application.exceptions.PageException;
 import com.dmarcu.layered.application.queries.QueryHandler;
+import com.dmarcu.layered.domain.BookReadDto;
 import com.dmarcu.layered.domain.BookRepository;
 import org.springframework.stereotype.Service;
 
@@ -9,20 +11,25 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class BooksHandler implements QueryHandler<List<BooksResult>, BooksQuery> {
+public class BooksHandler extends AbstractBooksHandler implements QueryHandler<BooksResult, BooksQuery> {
 
     private final BookRepository bookRepository;
-    private final ObjectMappers objectMapper;
 
-    public BooksHandler(BookRepository bookRepository, ObjectMappers objectMapper){
+    public BooksHandler(BookRepository bookRepository, ImageHelper imageHelper){
+        super(imageHelper);
         this.bookRepository = bookRepository;
-        this.objectMapper = objectMapper;
     }
 
     @Override
-    public List<BooksResult> handle(BooksQuery query) {
-        var books = bookRepository.getAll();
-        return books.stream().map(objectMapper::convert).collect(Collectors.toList());
+    public BooksResult handle(BooksQuery query) {
+        if(query.getPage() < 1) {
+            throw new PageException("Page must be at least 1");
+        }
+        var books = bookRepository.getAll(query.getPage(), pageSize);
+        List<BookReadDto> convertedBooks = books.stream().map(this::convert).collect(Collectors.toList());
+        int totalBooks = bookRepository.getCount();
+        return getBooksResult(query, convertedBooks, totalBooks);
     }
+
 
 }

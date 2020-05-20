@@ -1,34 +1,38 @@
 package com.dmarcu.layered.application.queries.books;
 
-import com.dmarcu.layered.application.ObjectMappers;
+import com.dmarcu.layered.application.ImageHelper;
+import com.dmarcu.layered.application.exceptions.PageException;
 import com.dmarcu.layered.application.queries.QueryHandler;
-import com.dmarcu.layered.domain.BookReadDto;
-import com.dmarcu.layered.domain.BookRepository;
-import com.dmarcu.layered.domain.User;
-import com.dmarcu.layered.domain.UserRepository;
+import com.dmarcu.layered.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class UserBooksHandler implements QueryHandler<List<BooksResult>, UserBooksQuery> {
+public class UserBooksHandler extends AbstractBooksHandler implements QueryHandler<BooksResult, UserBooksQuery> {
 
     private final BookRepository bookRepository;
     private final UserRepository userRepository;
-    private final ObjectMappers objectMappers;
 
-    public UserBooksHandler(BookRepository bookRepository, ObjectMappers objectMappers,
+    public UserBooksHandler(BookRepository bookRepository, ImageHelper imageHelper,
                             UserRepository userRepository) {
+        super(imageHelper);
         this.bookRepository = bookRepository;
-        this.objectMappers = objectMappers;
         this.userRepository = userRepository;
     }
 
     @Override
-    public List<BooksResult> handle(UserBooksQuery query) {
+    public BooksResult handle(UserBooksQuery query) {
+        if(query.getPage() < 1) {
+            throw new PageException("Page must be at least 1");
+        }
         User user = userRepository.getByUsername(query.getUsername());
-        List<BookReadDto> books = bookRepository.getAllByUserId(user.getId());
-        return books.stream().map(objectMappers::convert).collect(Collectors.toList());
+        List<Book> books = bookRepository.getAllByUserId(user.getId(), query.getPage(), pageSize);
+        List<BookReadDto> convertedBooks = books.stream().map(this::convert).collect(Collectors.toList());
+        int totalBooks = bookRepository.getCountOfUser(user.getId());
+        return getBooksResult(query, convertedBooks, totalBooks);
     }
+
+
 }

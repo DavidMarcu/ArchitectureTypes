@@ -11,40 +11,64 @@ const store = new Vuex.Store({
     storage: window.sessionStorage
   })],
   state: {
-    books: [],
-    allBooks: [],
+    books: {
+      books: [],
+      count: 0,
+      countPerPage: 0
+    },
+    pageNumberUser: 1,
+    allBooks: {
+      books: [],
+      count: 0,
+      countPerPage: 0
+    },
+    pageNumberAll: 1,
     userAuthorization: null
   },
   mutations: {
-    SET_BOOKS(state, books) {
-      state.books = books
+    SET_BOOKS(state, response) {
+      state.books.books = response.books
+      state.books.count = response.totalBooks
+      state.books.countPerPage = response.booksPerPage
     },
-    SET_ALL_BOOKS(state, books) {
-      state.allBooks = books
+    SET_PAGE(state, page) {
+      state.pageNumberUser = page
+    },
+    SET_ALL_BOOKS(state, response) {
+      state.allBooks.books = response.books
+      state.allBooks.count = response.totalBooks
+      state.allBooks.countPerPage = response.booksPerPage
+    },
+    SET_ALL_PAGE(state, page) {
+      state.pageNumberAll = page
     },
     SET_AUTHORIZATION(state, authentication) {
       state.userAuthorization = authentication
     },
   },
   actions: {
-    fetchBooks(context) {
-      bookService.getBooksForUser()
+    fetchBooks(context, page) {
+      bookService.getBooksForUser(page)
           .then(response => {
             context.commit('SET_BOOKS', response.data)
+            context.commit('SET_PAGE', response.data.lastPage)
           })
           .catch(error => {
-            console.log("Error on get request: " + error)
+            console.error("Error on get request: " + error)
           })
     },
-    fetchAllBooks(context) {
-      bookService.getAllBooks()
-          .then(response => context.commit('SET_ALL_BOOKS', response.data))
-          .catch(error => console.log(error))
+    fetchAllBooks(context, page) {
+      bookService.getAllBooks(page)
+          .then(response => {
+            context.commit('SET_ALL_BOOKS', response.data)
+            context.commit('SET_ALL_PAGE', response.data.lastPage)
+          })
+          .catch(error => console.error(error))
     },
     insertBook(context, book) {
       bookService.insertBook(book)
           .then(() => context.dispatch('fetchBooks'))
-          .catch(error => console.log("Error on post request: " + error))
+          .catch(error => console.error("Error on post request: " + error))
     },
     loginUser(context, user) {
       return new Promise((resolve, reject) =>
@@ -62,9 +86,15 @@ const store = new Vuex.Store({
       return authorization !== null ? authorization.authorizationHeader : null
     },
     ownsBook: state => isbn => {
-      const bookIsbns = state.books.map(book => book.isbn)
+      const bookIsbns = state.books.books.map(book => book.isbn)
       return bookIsbns.includes(isbn)
-    }
+    },
+    getBooksObject(state) {
+      return state.books
+    },
+    getAllBooksObject(state) {
+      return state.allBooks
+    },
   },
   modules: {
   }

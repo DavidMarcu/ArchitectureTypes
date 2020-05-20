@@ -2,7 +2,7 @@ package com.dmarcu.layered.application.queries.books;
 
 import com.dmarcu.layered.application.ImageHelper;
 import com.dmarcu.layered.application.queries.QueryHandler;
-import com.dmarcu.layered.domain.BookReadDto;
+import com.dmarcu.layered.domain.Book;
 import com.dmarcu.layered.domain.BookRepository;
 import org.springframework.stereotype.Service;
 
@@ -21,19 +21,19 @@ public class BookHandler implements QueryHandler<BookResult, BookQuery> {
 
     @Override
     public BookResult handle(BookQuery query) {
-        BookReadDto book = bookRepository.getByIsbn(query.getIsbn());
+        Book book = bookRepository.getByIsbn(query.getIsbn());
         return convert(book);
     }
 
-    private BookResult convert(BookReadDto bookReadDto) {
+    private BookResult convert(Book book) {
         var bookConverted = new BookResult();
-        bookConverted.setIsbn(bookReadDto.getIsbn());
-        bookConverted.setTitle(bookReadDto.getTitle());
-        bookConverted.setDescription(bookReadDto.getDescription());
-        bookConverted.setAuthors(Arrays.asList(bookReadDto.getAuthors().split(", ")));
-        String[] splittedFilename = bookReadDto.getCoverImage().split("\\.");
+        bookConverted.setIsbn(book.getIsbn());
+        bookConverted.setTitle(book.getTitle());
+        bookConverted.setDescription(book.getDescription());
+        bookConverted.setAuthors(Arrays.asList(book.getAuthors().split(", ")));
+        String[] splittedFilename = book.getCoverImage().split("\\.");
         bookConverted.setCoverImageType(splittedFilename[splittedFilename.length - 1]);
-        bookConverted.setCoverImage(imageHelper.getImageFromPath(bookReadDto.getCoverImage()));
+        bookConverted.setCoverImage(imageHelper.getImageFromPath(book.getCoverImage()));
         return bookConverted;
     }
 }

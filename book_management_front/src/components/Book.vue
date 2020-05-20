@@ -21,7 +21,7 @@
               {{book.description}}
             </p>
 
-            <ReviewModal v-show="hasBook"
+            <ReviewModal v-if="hasBook"
                          :rating="ownReview !== null ? ownReview.rating : 0"
                          :review="ownReview !== null ? ownReview.review : ''"
                          :ownership="ownReview !== null"
@@ -74,9 +74,19 @@
       bookService.getBookByIsbn(this.isbn)
           .then(response => {
             this.book = response.data
-            this.hasBook = this.$store.getters.ownsBook(this.isbn)
           })
           .catch(error => console.error(error));
+      bookService.getBookOwnership(this.isbn)
+          .then(() => this.hasBook = true)
+          .catch(error => {
+            if(error.response.status === 404) {
+              this.hasBook = false
+            }
+            else {
+              console.error(error)
+              this.hasBook = false
+            }
+          })
       reviewService.getReviewsForBook(this.isbn)
         .then(response => {
           this.reviews = response.data.otherReviews
