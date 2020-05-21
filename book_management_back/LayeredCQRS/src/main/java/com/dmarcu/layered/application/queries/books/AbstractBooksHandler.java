@@ -14,6 +14,7 @@ public abstract class AbstractBooksHandler {
 
     @Getter
     protected final ImageHelper imageHelper;
+
     @Value("${books.page_size}")
     protected int pageSize;
 
@@ -24,7 +25,7 @@ public abstract class AbstractBooksHandler {
     protected BooksResult getBooksResult(AbstractBooksQuery query, List<BookReadDto> convertedBooks, int totalBooks) {
         int currentPage = query.getPage();
         int lastPage = getLastPage(totalBooks);
-        if(currentPage > lastPage) {
+        if(totalBooks > 0 && currentPage > lastPage) {
             throw new PageException("Page not available");
         }
         int prevPage = currentPage > 1 ? currentPage - 1 : currentPage;

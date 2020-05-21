@@ -47,8 +47,8 @@ const store = new Vuex.Store({
     },
   },
   actions: {
-    fetchBooks(context, page) {
-      bookService.getBooksForUser(page)
+    fetchBooks(context, payloadObject) {
+      bookService.getBooksForUser(payloadObject.page, payloadObject.searchTerm)
           .then(response => {
             context.commit('SET_BOOKS', response.data)
             context.commit('SET_PAGE', response.data.lastPage)
@@ -57,8 +57,8 @@ const store = new Vuex.Store({
             console.error("Error on get request: " + error)
           })
     },
-    fetchAllBooks(context, page) {
-      bookService.getAllBooks(page)
+    fetchAllBooks(context, payloadObject) {
+      bookService.getAllBooks(payloadObject.page, payloadObject.searchTerm)
           .then(response => {
             context.commit('SET_ALL_BOOKS', response.data)
             context.commit('SET_ALL_PAGE', response.data.lastPage)

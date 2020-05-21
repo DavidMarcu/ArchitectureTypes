@@ -4,17 +4,25 @@
       <div class="row">
         <div class="col-md-12">
           <v-row dense>
-            <v-col md="4" class="pl-6 pt-6">
+            <v-col cols="12" md="4" class="pl-6 pt-6">
               <small>Showing {{leftNumber}}-{{rightNumber}} of {{books.count}} books</small>
             </v-col>
-            <v-col md="4">
+            <v-col cols="12" md="4">
               <v-btn href="/books" color="success">
                 <v-icon>mdi-book-plus</v-icon>
                 Add new book
               </v-btn>
             </v-col>
-            <v-col md="4">
-              <v-select class="pa-0" v-model="select" :items="options" style="margin-bottom: -20px;" outlined dense></v-select>
+            <v-col cols="12" md="4">
+              <v-form @submit.prevent="searchBooks">
+                <v-text-field
+                      v-model="searchTerm"
+                      flat
+                      hide-details
+                      prepend-inner-icon="mdi-magnify"
+                      label="Search"/>
+<!--              <v-select class="pa-0" v-model="select" :items="options" style="margin-bottom: -20px;" outlined dense></v-select>-->
+              </v-form>
             </v-col>
           </v-row>
 
@@ -80,15 +88,14 @@
 <script>
     export default {
       created() {
-          this.$store.dispatch("fetchBooks", this.page)
+        const payloadObject = {
+          page: this.page,
+          searchTerm: null
+        }
+        this.$store.dispatch("fetchBooks", payloadObject)
       },
       data: () => ({
-            select: 'Title',
-            options: [
-                'Rating',
-                'Title',
-                'Authors'
-            ],
+            searchTerm: "",
             page: 1
         }),
       methods: {
@@ -96,7 +103,18 @@
           return `data:image/${book.coverImageType};base64,${book.coverImage}`
         },
         fetchBooks() {
-          this.$store.dispatch("fetchBooks", this.page)
+          const payloadObject = {
+            page: this.page,
+            searchTerm: null
+          }
+          this.$store.dispatch("fetchBooks", payloadObject)
+        },
+        searchBooks() {
+          const payloadObject = {
+            page: this.page,
+            searchTerm: this.searchTerm
+          }
+          this.$store.dispatch("fetchBooks", payloadObject)
         }
       },
       computed: {
@@ -107,10 +125,11 @@
           return this.$store.state.pageNumberUser
         },
         leftNumber() {
-          return (this.page - 1) * this.books.countPerPage + 1
+          return this.books.count === 0 ? 0 : (this.page - 1) * this.books.countPerPage + 1
         },
         rightNumber() {
-          return this.page === this.pageLength ? this.books.count : this.page * this.books.countPerPage
+          if(this.books.count === 0) return 0
+          else return this.page === this.pageLength ? this.books.count : this.page * this.books.countPerPage
         }
       }
     }

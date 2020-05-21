@@ -3,10 +3,15 @@ package com.dmarcu.layered.application.queries.books;
 import lombok.Getter;
 
 public abstract class AbstractBooksQuery {
-    @Getter
-    protected final int page;
 
-    public AbstractBooksQuery(int page) {
+    @Getter
+    private final int page;
+
+    @Getter
+    private final String searchTerm;
+
+    protected AbstractBooksQuery(int page, String searchTerm) {
         this.page = page;
+        this.searchTerm = searchTerm;
     }
 }

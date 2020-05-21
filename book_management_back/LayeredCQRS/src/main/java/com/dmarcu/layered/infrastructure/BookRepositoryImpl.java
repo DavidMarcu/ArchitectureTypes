@@ -48,6 +48,44 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
+    public int getCountBySearchTerm(String searchTerm) {
+        searchTerm = "%" + searchTerm + "%";
+        String countQuery = "SELECT count(1) FROM books WHERE title LIKE ? OR authors LIKE ?";
+        Integer count = jdbcTemplate.queryForObject(countQuery, new Object[]{searchTerm, searchTerm},
+                Integer.class);
+        return count != null ? count : 0;
+    }
+
+    @Override
+    public List<Book> getAllBySearchTerm(int page, int pageSize, String searchTerm) {
+        searchTerm = "%" + searchTerm + "%";
+        String readQuery = "SELECT isbn, authors, title, cover_image FROM books " +
+                "WHERE title LIKE ? OR authors LIKE ? LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(readQuery, new Object[]{searchTerm, searchTerm, pageSize,
+                (page - 1) * pageSize}, new BeanPropertyRowMapper<>(Book.class));
+    }
+
+    @Override
+    public int getCountOfUserBySearchTerm(int userId, String searchTerm) {
+        searchTerm = "%" + searchTerm + "%";
+        String countQuery = "SELECT count(1) FROM books JOIN users_books ON isbn = bookID " +
+                "WHERE userID = ? AND (title LIKE ? OR authors LIKE ?)";
+        Integer count = jdbcTemplate.queryForObject(countQuery,
+                new Object[]{userId, searchTerm, searchTerm}, Integer.class);
+        return count != null ? count : 0;
+    }
+
+    @Override
+    public List<Book> getAllByUserIdAndSearchTerm(int userId, int page, int pageSize, String searchTerm) {
+        searchTerm = "%" + searchTerm + "%";
+        String readQuery = "SELECT isbn, authors, title, cover_image FROM books JOIN users_books " +
+                "ON isbn = bookID WHERE userID = ? AND (title LIKE ? OR authors LIKE ?) " +
+                "LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(readQuery, new Object[]{userId, searchTerm, searchTerm, pageSize,
+                (page - 1) * pageSize}, new BeanPropertyRowMapper<>(Book.class));
+    }
+
+    @Override
     public Book getByIsbn(String isbn) {
         String readQuery = "SELECT isbn, authors, title, cover_image, description FROM books " +
                 "WHERE isbn = ?";

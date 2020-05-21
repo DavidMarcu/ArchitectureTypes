@@ -54,6 +54,7 @@
                   </v-list-item>
                 </v-list-item-group>
               </v-list>
+              <v-btn text small @click="addReviews">show more</v-btn>
             </v-tab-item>
           </v-tabs>
         </div>
@@ -131,6 +132,9 @@
         bookService.addBookForUser(bookToBeAdded)
           .then(() => this.$router.push('/'))
           .catch(error => console.error(error))
+      },
+      addReviews() {
+
       }
     }
   }

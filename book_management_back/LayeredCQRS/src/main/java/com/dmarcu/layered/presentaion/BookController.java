@@ -24,9 +24,10 @@ public class BookController {
         this.applicationBus = applicationBus;
     }
 
-    @GetMapping(params = {"page"})
-    public ResponseEntity<BooksResult> getAllBooks(@RequestParam int page) {
-        return new ResponseEntity<>(applicationBus.executeQuery(new BooksQuery(page)), HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<BooksResult> getAllBooks(@RequestParam(value = "page") int page,
+                               @RequestParam(value = "q", required = false) String q) {
+        return new ResponseEntity<>(applicationBus.executeQuery(new BooksQuery(page, q)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/user/book/{isbn}", method = RequestMethod.HEAD)
@@ -41,11 +42,12 @@ public class BookController {
         return new ResponseEntity<>(applicationBus.executeQuery(new BookQuery(isbn)), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/user", params = {"page"})
+    @GetMapping(value = "/user")
     public ResponseEntity<BooksResult> getAllBooksForUser(Authentication authentication,
-                                                          @RequestParam int page) {
+                          @RequestParam(value = "page") int page,
+                          @RequestParam(value = "q", required = false) String q) {
         return new ResponseEntity<>(applicationBus.executeQuery(
-                new UserBooksQuery(page, authentication.getName())), HttpStatus.OK);
+                new UserBooksQuery(page, q, authentication.getName())), HttpStatus.OK);
     }
 
     @PostMapping
@@ -61,8 +63,8 @@ public class BookController {
     }
 
     @DeleteMapping(value = "/book/{isbn}")
-    public ResponseEntity<Void>
-    deleteBookForUser(Authentication authentication, @PathVariable String isbn) {
+    public ResponseEntity<Void> deleteBookForUser(Authentication authentication,
+                                                  @PathVariable String isbn) {
         DeleteBookOfUserCommand deleteCommand = new DeleteBookOfUserCommand(authentication.getName(), isbn);
         return new ResponseEntity<>(applicationBus.executeCommand(deleteCommand), HttpStatus.OK);
     }

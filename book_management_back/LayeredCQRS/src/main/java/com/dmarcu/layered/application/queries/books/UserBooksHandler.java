@@ -6,6 +6,7 @@ import com.dmarcu.layered.application.queries.QueryHandler;
 import com.dmarcu.layered.domain.*;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,9 +29,21 @@ public class UserBooksHandler extends AbstractBooksHandler implements QueryHandl
             throw new PageException("Page must be at least 1");
         }
         User user = userRepository.getByUsername(query.getUsername());
-        List<Book> books = bookRepository.getAllByUserId(user.getId(), query.getPage(), pageSize);
+        List<Book> books;
+        int totalBooks;
+        if(query.getSearchTerm() != null) {
+            totalBooks = bookRepository.getCountOfUserBySearchTerm(user.getId(), query.getSearchTerm());
+            books = totalBooks > 0
+                    ? bookRepository.getAllByUserIdAndSearchTerm(user.getId(), query.getPage(),
+                    pageSize, query.getSearchTerm())
+                    : Collections.emptyList();
+        } else {
+            totalBooks = bookRepository.getCountOfUser(user.getId());
+            books = totalBooks > 0
+                    ? bookRepository.getAllByUserId(user.getId(), query.getPage(), pageSize)
+                    : Collections.emptyList();
+        }
         List<BookReadDto> convertedBooks = books.stream().map(this::convert).collect(Collectors.toList());
-        int totalBooks = bookRepository.getCountOfUser(user.getId());
         return getBooksResult(query, convertedBooks, totalBooks);
     }
 

@@ -11,7 +11,16 @@
               <NewBook></NewBook>
             </v-col>
             <v-col md="4">
-              <v-select class="pa-0" v-model="select" :items="options" style="margin-bottom: -20px;" outlined dense></v-select>
+              <v-form @submit.prevent="searchBooks">
+                <v-text-field
+                      v-model="searchTerm"
+                      flat
+                      hide-details
+                      prepend-inner-icon="mdi-magnify"
+                      label="Search"
+                      class="hidden-sm-and-down pl-10 ml-4"/>
+<!--              <v-select class="pa-0" v-model="select" :items="options" style="margin-bottom: -20px;" outlined dense></v-select>-->
+              </v-form>
             </v-col>
           </v-row>
 
@@ -83,15 +92,14 @@
       NewBook
     },
     created() {
-      this.$store.dispatch("fetchAllBooks", this.page)
+      const payloadObject = {
+        page: this.page,
+        searchTerm: null
+      }
+      this.$store.dispatch("fetchAllBooks", payloadObject)
     },
     data: () => ({
-      select:'Title',
-      options: [
-        'Rating',
-        'Title',
-        'Authors'
-      ],
+      searchTerm: "",
       page:1
     }),
     methods: {
@@ -99,7 +107,18 @@
         return `data:image/${book.coverImageType};base64,${book.coverImage}`
       },
       fetchAllBooks() {
-        this.$store.dispatch("fetchAllBooks", this.page)
+        const payloadObject = {
+          page: this.page,
+          searchTerm: null
+        }
+        this.$store.dispatch("fetchAllBooks", payloadObject)
+      },
+      searchBooks() {
+        const payloadObject = {
+          page: this.page,
+          searchTerm: this.searchTerm
+        }
+        this.$store.dispatch("fetchAllBooks", payloadObject)
       }
     },
     computed: {
@@ -110,10 +129,11 @@
         return this.$store.state.pageNumberAll
       },
       leftNumber() {
-        return (this.page - 1) * this.books.countPerPage + 1
+        return this.books.count === 0 ? 0 : (this.page - 1) * this.books.countPerPage + 1
       },
       rightNumber() {
-        return this.page === this.pageLength ? this.books.count : this.page * this.books.countPerPage
+        if(this.books.count === 0) return 0
+        else return this.page === this.pageLength ? this.books.count : this.page * this.books.countPerPage
       }
     }
   }

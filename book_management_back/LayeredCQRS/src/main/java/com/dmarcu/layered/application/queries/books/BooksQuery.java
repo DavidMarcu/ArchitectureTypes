@@ -8,7 +8,7 @@ import java.util.List;
 
 public class BooksQuery extends AbstractBooksQuery implements Query<BooksResult> {
 
-    public BooksQuery(int page) {
-        super(page);
+    public BooksQuery(int page, String searchTerm) {
+        super(page, searchTerm);
     }
 }

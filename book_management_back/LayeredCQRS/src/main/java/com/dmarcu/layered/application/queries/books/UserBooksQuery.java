@@ -8,8 +8,8 @@ public class UserBooksQuery extends AbstractBooksQuery implements Query<BooksRes
     @Getter
     private final String username;
 
-    public UserBooksQuery(int page, String username) {
-        super(page);
+    public UserBooksQuery(int page, String searchTerm, String username) {
+        super(page, searchTerm);
         this.username = username;
     }
 }
