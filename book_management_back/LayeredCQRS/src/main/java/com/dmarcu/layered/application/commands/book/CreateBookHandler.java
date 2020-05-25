@@ -3,7 +3,7 @@ package com.dmarcu.layered.application.commands.book;
 import com.dmarcu.layered.application.ImageHelper;
 import com.dmarcu.layered.application.commands.CommandHandler;
 import com.dmarcu.layered.domain.Book;
-import com.dmarcu.layered.domain.BookRepository;
+import com.dmarcu.layered.domain.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,9 @@
-package com.dmarcu.layered.domain;
+package com.dmarcu.layered.domain.repositories;
+
+import com.dmarcu.layered.domain.BookUserCongregate;
+import com.dmarcu.layered.domain.Page;
+import com.dmarcu.layered.domain.Review;
+import com.dmarcu.layered.domain.ReviewUser;
 
 import java.util.List;
 

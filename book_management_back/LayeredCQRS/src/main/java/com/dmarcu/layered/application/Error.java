@@ -1,4 +1,4 @@
-package com.dmarcu.layered.domain;
+package com.dmarcu.layered.application;
 
 import lombok.Data;
 

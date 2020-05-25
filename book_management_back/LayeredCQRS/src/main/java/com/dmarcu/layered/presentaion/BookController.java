@@ -6,7 +6,7 @@ import com.dmarcu.layered.application.exceptions.BookNotFoundException;
 import com.dmarcu.layered.application.exceptions.OwnershipException;
 import com.dmarcu.layered.application.exceptions.PageException;
 import com.dmarcu.layered.application.queries.books.*;
-import com.dmarcu.layered.domain.Error;
+import com.dmarcu.layered.application.Error;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

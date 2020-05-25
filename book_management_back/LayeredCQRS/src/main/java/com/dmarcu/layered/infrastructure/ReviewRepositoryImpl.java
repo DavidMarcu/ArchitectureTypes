@@ -1,6 +1,7 @@
 package com.dmarcu.layered.infrastructure;
 
 import com.dmarcu.layered.domain.*;
+import com.dmarcu.layered.domain.repositories.ReviewRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;

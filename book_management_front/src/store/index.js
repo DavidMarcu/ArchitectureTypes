@@ -67,7 +67,7 @@ const store = new Vuex.Store({
     },
     insertBook(context, book) {
       bookService.insertBook(book)
-          .then(() => context.dispatch('fetchBooks'))
+          .then(() => context.dispatch('fetchAllBooks', {page: 1}))
           .catch(error => console.error("Error on post request: " + error))
     },
     loginUser(context, user) {

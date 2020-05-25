@@ -2,7 +2,7 @@ package com.dmarcu.layered.application.commands.user;
 
 import com.dmarcu.layered.application.commands.CommandHandler;
 import com.dmarcu.layered.domain.User;
-import com.dmarcu.layered.domain.UserRepository;
+import com.dmarcu.layered.domain.repositories.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 

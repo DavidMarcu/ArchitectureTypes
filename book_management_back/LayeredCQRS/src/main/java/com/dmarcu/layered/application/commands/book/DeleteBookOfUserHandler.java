@@ -1,10 +1,10 @@
 package com.dmarcu.layered.application.commands.book;
 
 import com.dmarcu.layered.application.commands.CommandHandler;
-import com.dmarcu.layered.domain.BookRepository;
+import com.dmarcu.layered.domain.repositories.BookRepository;
 import com.dmarcu.layered.domain.BookUserCongregate;
 import com.dmarcu.layered.domain.User;
-import com.dmarcu.layered.domain.UserRepository;
+import com.dmarcu.layered.domain.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service

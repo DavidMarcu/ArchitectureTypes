@@ -2,7 +2,8 @@ package com.dmarcu.layered.infrastructure;
 
 import com.dmarcu.layered.application.exceptions.BookNotFoundException;
 import com.dmarcu.layered.domain.Book;
-import com.dmarcu.layered.domain.BookRepository;
+import com.dmarcu.layered.domain.Page;
+import com.dmarcu.layered.domain.repositories.BookRepository;
 import com.dmarcu.layered.domain.BookUserCongregate;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -27,9 +28,10 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
-    public List<Book> getAll(int page, int pageSize) {
+    public List<Book> getAll(Page pagination) {
         String readQuery = "SELECT isbn, authors, title, cover_image FROM books LIMIT ? OFFSET ?";
-        return jdbcTemplate.query(readQuery, new Object[]{pageSize, (page - 1) * pageSize}, new BeanPropertyRowMapper<>(Book.class));
+        return jdbcTemplate.query(readQuery, new Object[]{pagination.getPageSize(),
+                getOffset(pagination)}, new BeanPropertyRowMapper<>(Book.class));
     }
 
     @Override
@@ -40,11 +42,11 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
-    public List<Book> getAllByUserId(int userId, int page, int pageSize) {
+    public List<Book> getAllByUserId(int userId, Page pagination) {
         String readQuery = "SELECT isbn, authors, title, cover_image FROM books " +
                 "JOIN users_books ON isbn = bookID WHERE userID = ? LIMIT ? OFFSET ?";
-        return jdbcTemplate.query(readQuery, new Object[]{userId, pageSize, (page - 1) * pageSize},
-                new BeanPropertyRowMapper<>(Book.class));
+        return jdbcTemplate.query(readQuery, new Object[]{userId, pagination.getPageSize(),
+                        getOffset(pagination)}, new BeanPropertyRowMapper<>(Book.class));
     }
 
     @Override
@@ -57,12 +59,13 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
-    public List<Book> getAllBySearchTerm(int page, int pageSize, String searchTerm) {
+    public List<Book> getAllBySearchTerm(Page pagination, String searchTerm) {
         searchTerm = "%" + searchTerm + "%";
         String readQuery = "SELECT isbn, authors, title, cover_image FROM books " +
                 "WHERE title LIKE ? OR authors LIKE ? LIMIT ? OFFSET ?";
-        return jdbcTemplate.query(readQuery, new Object[]{searchTerm, searchTerm, pageSize,
-                (page - 1) * pageSize}, new BeanPropertyRowMapper<>(Book.class));
+        return jdbcTemplate.query(readQuery, new Object[]{searchTerm, searchTerm,
+                pagination.getPageSize(), getOffset(pagination)},
+                new BeanPropertyRowMapper<>(Book.class));
     }
 
     @Override
@@ -76,13 +79,14 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
-    public List<Book> getAllByUserIdAndSearchTerm(int userId, int page, int pageSize, String searchTerm) {
+    public List<Book> getAllByUserIdAndSearchTerm(int userId, Page pagination, String searchTerm) {
         searchTerm = "%" + searchTerm + "%";
         String readQuery = "SELECT isbn, authors, title, cover_image FROM books JOIN users_books " +
                 "ON isbn = bookID WHERE userID = ? AND (title LIKE ? OR authors LIKE ?) " +
                 "LIMIT ? OFFSET ?";
-        return jdbcTemplate.query(readQuery, new Object[]{userId, searchTerm, searchTerm, pageSize,
-                (page - 1) * pageSize}, new BeanPropertyRowMapper<>(Book.class));
+        return jdbcTemplate.query(readQuery, new Object[]{userId, searchTerm, searchTerm,
+                pagination.getPageSize(), getOffset(pagination)},
+                new BeanPropertyRowMapper<>(Book.class));
     }
 
     @Override
@@ -98,9 +102,10 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
-    public int getCountOfUserByIsbn(int userId, String isbn) {
+    public int getCountOfUserByIsbn(BookUserCongregate congregate) {
         String countQuery = "SELECT count(1) FROM users_books WHERE userID = ? AND bookID = ?";
-        Integer count = jdbcTemplate.queryForObject(countQuery, new Object[]{userId, isbn}, Integer.class);
+        Integer count = jdbcTemplate.queryForObject(countQuery, new Object[]{congregate.getUserId()
+                , congregate.getIsbn()}, Integer.class);
         return count != null ? count : 0;
     }
 
@@ -123,5 +128,9 @@ public class BookRepositoryImpl implements BookRepository {
                 "VALUES(?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(insertStatement, book.getIsbn(), book.getTitle(), book.getAuthors(), book.getYearPublished(),
                 book.getEditionNumber(), book.getCoverImage(), book.getDescription());
+    }
+
+    private int getOffset(Page pagination) {
+        return (pagination.getPageNo() - 1) * pagination.getPageSize();
     }
 }

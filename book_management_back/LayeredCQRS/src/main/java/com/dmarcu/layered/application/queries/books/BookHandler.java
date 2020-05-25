@@ -3,7 +3,7 @@ package com.dmarcu.layered.application.queries.books;
 import com.dmarcu.layered.application.ImageHelper;
 import com.dmarcu.layered.application.queries.QueryHandler;
 import com.dmarcu.layered.domain.Book;
-import com.dmarcu.layered.domain.BookRepository;
+import com.dmarcu.layered.domain.repositories.BookRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;

@@ -1,4 +1,6 @@
-package com.dmarcu.layered.domain;
+package com.dmarcu.layered.domain.repositories;
+
+import com.dmarcu.layered.domain.User;
 
 public interface UserRepository {
 

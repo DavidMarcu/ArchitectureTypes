@@ -4,6 +4,8 @@ import com.dmarcu.layered.application.ImageHelper;
 import com.dmarcu.layered.application.exceptions.PageException;
 import com.dmarcu.layered.application.queries.QueryHandler;
 import com.dmarcu.layered.domain.*;
+import com.dmarcu.layered.domain.repositories.BookRepository;
+import com.dmarcu.layered.domain.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -34,13 +36,13 @@ public class UserBooksHandler extends AbstractBooksHandler implements QueryHandl
         if(query.getSearchTerm() != null) {
             totalBooks = bookRepository.getCountOfUserBySearchTerm(user.getId(), query.getSearchTerm());
             books = totalBooks > 0
-                    ? bookRepository.getAllByUserIdAndSearchTerm(user.getId(), query.getPage(),
-                    pageSize, query.getSearchTerm())
+                    ? bookRepository.getAllByUserIdAndSearchTerm(user.getId(),
+                        new Page(query.getPage(), pageSize), query.getSearchTerm())
                     : Collections.emptyList();
         } else {
             totalBooks = bookRepository.getCountOfUser(user.getId());
             books = totalBooks > 0
-                    ? bookRepository.getAllByUserId(user.getId(), query.getPage(), pageSize)
+                    ? bookRepository.getAllByUserId(user.getId(), new Page(query.getPage(), pageSize))
                     : Collections.emptyList();
         }
         List<BookReadDto> convertedBooks = books.stream().map(this::convert).collect(Collectors.toList());

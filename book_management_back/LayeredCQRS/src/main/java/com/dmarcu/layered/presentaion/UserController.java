@@ -7,7 +7,7 @@ import com.dmarcu.layered.application.commands.user.AddUserCommand;
 import com.dmarcu.layered.application.commands.user.AddUserResult;
 import com.dmarcu.layered.application.commands.user.LoginUserCommand;
 import com.dmarcu.layered.application.commands.user.LoginUserResult;
-import com.dmarcu.layered.domain.Error;
+import com.dmarcu.layered.application.Error;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

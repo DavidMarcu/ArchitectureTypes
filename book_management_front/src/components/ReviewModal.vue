@@ -1,6 +1,6 @@
 <template>
   <div class="d-inline-block">
-    <v-dialog v-model="dialog" max-width="600px">
+    <v-dialog @click:outside="onCancel" v-model="dialog" max-width="600px">
       <template v-slot:activator="{ on }">
         <v-btn color="info" outlined v-on="on">
           <span v-if="ownership">EDIT REVIEW</span>
@@ -105,6 +105,10 @@
             this.dialog = false
           })
           .catch(error => console.error(error))
+      },
+      onCancel() {
+        this.formRating = this.rating
+        this.formReview = this.review
       }
     }
   }

@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <v-container>
-      <div class="row">
+  <div class="h-100">
+    <v-container class="h-100 comp">
+      <div class="content row">
         <div class="col-md-12">
           <v-row dense>
             <v-col cols="12" md="4" class="pl-6 pt-6">
@@ -33,20 +33,17 @@
                 <v-card
                   class="mx-auto"
                   color="grey lighten-4"
-                  max-width="600"
-                >
+                  max-width="600">
                   <v-img
                     class="white--text align-end"
                     :aspect-ratio="16/9"
                     height="400px"
-                    :src="imageSource(book)"
-                  >
+                    :src="imageSource(book)">
                     <v-expand-transition>
                       <div
                         v-if="hover"
                         class="d-flex transition-fast-in-fast-out white darken-2 v-card--reveal display-3 white--text"
-                        style="height: 100%;"
-                      >
+                        style="height: 100%;">
                         <v-btn v-if="hover" :href="'/book/' + book.isbn" outlined>VIEW</v-btn>
                       </div>
 
@@ -60,21 +57,20 @@
               </v-hover>
             </div>
           </div>
-          <div class="text-center mt-12">
-            <v-pagination
-              v-model="page"
-              @next="fetchBooks"
-              @previous="fetchBooks"
-              @input="fetchBooks"
-              :length="pageLength"
-            ></v-pagination>
-          </div>
         </div>
+      </div>
+      <div class="footer text-center">
+        <v-pagination
+                v-model="page"
+                @next="fetchBooks"
+                @previous="fetchBooks"
+                @input="fetchBooks"
+                :length="pageLength"></v-pagination>
       </div>
     </v-container>
   </div>
 </template>
-<style>
+<style scoped>
   .v-card--reveal {
     align-items: center;
     bottom: 0;
@@ -82,6 +78,19 @@
     opacity: .8;
     position: absolute;
     width: 100%;
+  }
+  .h-100 {
+    height: 100%;
+  }
+  .comp {
+    display: flex;
+    flex-direction: column;
+  }
+  .content {
+    flex: 1 0 auto;
+  }
+  .footer {
+    flex-shrink: 0;
   }
 </style>
 <script>

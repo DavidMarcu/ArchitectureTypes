@@ -3,7 +3,7 @@ package com.dmarcu.layered.infrastructure;
 import com.dmarcu.layered.application.exceptions.DuplicateUserException;
 import com.dmarcu.layered.application.exceptions.UserNotFoundException;
 import com.dmarcu.layered.domain.User;
-import com.dmarcu.layered.domain.UserRepository;
+import com.dmarcu.layered.domain.repositories.UserRepository;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
