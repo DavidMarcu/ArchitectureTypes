@@ -19,7 +19,6 @@
                       prepend-inner-icon="mdi-magnify"
                       label="Search"
                       class="hidden-sm-and-down pl-10 ml-4"/>
-<!--              <v-select class="pa-0" v-model="select" :items="options" style="margin-bottom: -20px;" outlined dense></v-select>-->
               </v-form>
             </v-col>
           </v-row>

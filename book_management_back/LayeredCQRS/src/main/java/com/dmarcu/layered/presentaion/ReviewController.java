@@ -35,11 +35,11 @@ public class ReviewController {
         return new ResponseEntity<>(bus.executeCommand(updateReviewCommand), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{isbn}")
+    @GetMapping(value = "/{isbn}", params = {"page"})
     public ResponseEntity<ReviewsResult> getReviews(Authentication authentication,
-                                                          @PathVariable String isbn) {
-        return new ResponseEntity<>(bus.executeQuery(new ReviewsQuery(isbn, authentication.getName()))
-                , HttpStatus.OK);
+                                        @PathVariable String isbn, @RequestParam int page) {
+        return new ResponseEntity<>(bus.executeQuery(new ReviewsQuery(isbn, page,
+                authentication.getName())), HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/review/{isbn}")

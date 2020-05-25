@@ -7,8 +7,8 @@ apiClient.interceptors.request.use((config) => {
 })
 
 const reviewService = {
-    getReviewsForBook(isbn) {
-      return apiClient.get(`books/reviews/${isbn}`)
+    getReviewsForBook(isbn, page) {
+      return apiClient.get(`books/reviews/${isbn}?page=${page}`)
     },
     addReviewForBook(data) {
       return apiClient.post(`books/reviews/review`, data)

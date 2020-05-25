@@ -7,5 +7,7 @@ public interface ReviewRepository {
     void add(Review review, BookUserCongregate congregate);
     void update(Review review, BookUserCongregate congregate);
     void delete(BookUserCongregate congregate);
-    List<ReviewUser> getForBook(String isbn);
+    List<ReviewUser> getForBook(BookUserCongregate congregate, Page pagination);
+    ReviewUser getOwnForBook(BookUserCongregate congregate);
+    List<Integer> ratingsForBook(String isbn);
 }

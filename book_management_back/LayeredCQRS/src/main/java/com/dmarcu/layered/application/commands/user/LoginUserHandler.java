@@ -1,8 +1,7 @@
 package com.dmarcu.layered.application.commands.user;
 
-import com.dmarcu.layered.application.ObjectMappers;
-import com.dmarcu.layered.application.exceptions.UserNotFoundException;
 import com.dmarcu.layered.application.commands.CommandHandler;
+import com.dmarcu.layered.application.exceptions.UserNotFoundException;
 import com.dmarcu.layered.domain.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,7 @@ public class LoginUserHandler implements CommandHandler<LoginUserResult, LoginUs
     private final UserRepository userRepository;
     private static final String AUTHORIZATION_HEADER_PREFIX = "Basic ";
 
-    public LoginUserHandler(UserRepository userRepository, ObjectMappers objectMappers) {
+    public LoginUserHandler(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

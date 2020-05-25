@@ -1,9 +1,7 @@
 package com.dmarcu.layered.infrastructure;
 
-import com.dmarcu.layered.domain.BookUserCongregate;
-import com.dmarcu.layered.domain.Review;
-import com.dmarcu.layered.domain.ReviewRepository;
-import com.dmarcu.layered.domain.ReviewUser;
+import com.dmarcu.layered.domain.*;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -50,12 +48,37 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     }
 
     @Override
-    public List<ReviewUser> getForBook(String isbn) {
+    public List<Integer> ratingsForBook(String isbn) {
+        String ratingQuery = "SELECT rating FROM reviews_users_books JOIN reviews ON reviewID = id" +
+                " WHERE bookID = ? ";
+        return jdbcTemplate.queryForList(ratingQuery, new Object[]{isbn}, Integer.class);
+    }
+
+    @Override
+    public List<ReviewUser> getForBook(BookUserCongregate congregate, Page pagination) {
         String queryForReviews = "SELECT reviewID, username, review, rating FROM reviews_users_books " +
-                "JOIN users ON users.id = userID JOIN reviews ON reviews.id = reviewID WHERE bookID = ?";
-        return jdbcTemplate.query(queryForReviews, new Object[]{isbn},
+                "JOIN users ON users.id = userID JOIN reviews ON reviews.id = reviewID " +
+                "WHERE bookID = ? AND userID != ?  LIMIT ? OFFSET ?";
+        int offset = (pagination.getPageNo() - 1) * pagination.getPageSize();
+        return jdbcTemplate.query(queryForReviews,
+                new Object[]{congregate.getIsbn(), congregate.getUserId(),
+                        pagination.getPageSize(), offset},
                 new BeanPropertyRowMapper<>(ReviewUser.class));
     }
+
+    @Override
+    public ReviewUser getOwnForBook(BookUserCongregate congregate) {
+        String ownReviewQuery = "SELECT review, rating FROM reviews JOIN reviews_users_books " +
+                "ON reviews.id = reviewID JOIN users ON users.id = userID WHERE userID = ? AND " +
+                "bookID = ?";
+        try {
+         return jdbcTemplate.queryForObject(ownReviewQuery, new Object[]{congregate.getUserId(),
+                    congregate.getIsbn()}, new BeanPropertyRowMapper<>(ReviewUser.class));
+        } catch (EmptyResultDataAccessException exception) {
+            return null;
+        }
+    }
+
 
     @Override
     public void delete(BookUserCongregate congregate) {

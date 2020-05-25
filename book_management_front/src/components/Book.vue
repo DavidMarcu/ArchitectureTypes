@@ -6,7 +6,6 @@
           <v-img :aspect-ratio="0.75" :src="imageSource"></v-img>
         </div>
         <div class="col-lg-9 col-md-7 col-sm-7 col-xs-12">
-<!--          <v-breadcrumbs class="pb-0" :items="breadcrums"></v-breadcrumbs>-->
           <div class="pl-6">
             <p class="display-1 mb-0">{{book.title}}</p>
             <v-card-actions class="pa-0">
@@ -17,7 +16,7 @@
               <span v-if="this.numberOfReviews === 1" class="body-2	font-weight-thin"> 1 REVIEW</span>
               <span v-else class="body-2	font-weight-thin"> {{this.numberOfReviews}} REVIEWS</span>
             </v-card-actions>
-            <p class="subtitle-1 font-weight-thin">
+            <p class="subtitle-1">
               {{book.description}}
             </p>
 
@@ -54,7 +53,7 @@
                   </v-list-item>
                 </v-list-item-group>
               </v-list>
-              <v-btn text small @click="addReviews">show more</v-btn>
+              <v-btn v-if="page < lastPage" text small @click="addReviews">show more</v-btn>
             </v-tab-item>
           </v-tabs>
         </div>
@@ -88,31 +87,27 @@
               this.hasBook = false
             }
           })
-      reviewService.getReviewsForBook(this.isbn)
+      reviewService.getReviewsForBook(this.isbn, this.page)
         .then(response => {
           this.reviews = response.data.otherReviews
           this.ownReview = response.data.ownReview
-
-          const hasOwnReview = this.ownReview !== null
-          const reducer = (acumulator, currentValue) => acumulator + currentValue
-          this.numberOfReviews = hasOwnReview ? this.reviews.length + 1 : this.reviews.length
-          const otherReviewsRatings = this.reviews.length > 0
-              ? this.reviews.map(review => review.rating).reduce(reducer)
-              : 0
-          const ratingSum = hasOwnReview ? otherReviewsRatings + this.ownReview.rating : otherReviewsRatings
-          this.rating = ratingSum / this.numberOfReviews
+          this.numberOfReviews = response.data.reviewCount
+          this.rating = response.data.ratingAvg
+          this.lastPage = response.data.lastPage
         })
         .catch(error => console.error(error))
     },
     data() {
       return {
         book: null,
-        rating: 4.5,
+        rating: 0,
         item: 5,
         reviews: [],
         numberOfReviews: 0,
         ownReview: null,
-        hasBook: false
+        hasBook: false,
+        page: 1,
+        lastPage: 1
       }
     },
     computed: {
@@ -134,7 +129,9 @@
           .catch(error => console.error(error))
       },
       addReviews() {
-
+          reviewService.getReviewsForBook(this.isbn, ++this.page)
+            .then(response => this.reviews = this.reviews.concat(response.data.otherReviews))
+            .catch(error => console.error(error))
       }
     }
   }

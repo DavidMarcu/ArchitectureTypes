@@ -54,11 +54,9 @@
       ownership: Boolean,
       rating: {
         type: Number,
-        default: 0
       },
       review: {
         type: String,
-        default: ''
       }
     },
     name: "ReviewModal",

@@ -1,14 +1,19 @@
 package com.dmarcu.layered.application.queries.review;
 
 import com.dmarcu.layered.domain.ReviewUser;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
+@Builder
 public class ReviewsResult {
 
-  private final List<ReviewUser> otherReviews;
-  private final ReviewUser ownReview;
+  private int reviewCount;
+  private int lastPage;
+  private float ratingAvg;
+  private List<ReviewUser> otherReviews;
+  private ReviewUser ownReview;
 
 }
