@@ -3,7 +3,7 @@ package com.dmarcu.layered.application.queries.books;
 import com.dmarcu.layered.application.ImageHelper;
 import com.dmarcu.layered.application.exceptions.PageException;
 import com.dmarcu.layered.domain.Book;
-import com.dmarcu.layered.domain.BookReadDto;
+import com.dmarcu.layered.domain.BookRead;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -22,7 +22,7 @@ public abstract class AbstractBooksHandler {
         this.imageHelper = imageHelper;
     }
 
-    protected BooksResult getBooksResult(AbstractBooksQuery query, List<BookReadDto> convertedBooks, int totalBooks) {
+    protected BooksResult getBooksResult(AbstractBooksQuery query, List<BookRead> convertedBooks, int totalBooks) {
         int currentPage = query.getPage();
         int lastPage = getLastPage(totalBooks);
         if(totalBooks > 0 && currentPage > lastPage) {
@@ -45,8 +45,8 @@ public abstract class AbstractBooksHandler {
         return (int)Math.ceil(totalBooks / pageSize);
     }
 
-    protected BookReadDto convert(Book book) {
-        var bookConverted = new BookReadDto();
+    protected BookRead convert(Book book) {
+        var bookConverted = new BookRead();
         bookConverted.setIsbn(book.getIsbn());
         bookConverted.setTitle(book.getTitle());
         bookConverted.setAuthors(Arrays.asList(book.getAuthors().split(", ")));

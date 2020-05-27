@@ -45,7 +45,7 @@ public class UserBooksHandler extends AbstractBooksHandler implements QueryHandl
                     ? bookRepository.getAllByUserId(user.getId(), new Page(query.getPage(), pageSize))
                     : Collections.emptyList();
         }
-        List<BookReadDto> convertedBooks = books.stream().map(this::convert).collect(Collectors.toList());
+        List<BookRead> convertedBooks = books.stream().map(this::convert).collect(Collectors.toList());
         return getBooksResult(query, convertedBooks, totalBooks);
     }
 

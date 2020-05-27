@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class BookReadDto {
+public class BookRead {
     private String isbn;
     private String title;
     private List<String> authors;

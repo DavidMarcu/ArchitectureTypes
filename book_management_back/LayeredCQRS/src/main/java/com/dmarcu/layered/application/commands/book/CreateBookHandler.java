@@ -28,7 +28,7 @@ public class CreateBookHandler implements CommandHandler<CreateBookResult, Creat
         return new CreateBookResult(book.getIsbn());
     }
 
-    public Book convert(CreateBookCommand bookCommand) {
+    private Book convert(CreateBookCommand bookCommand) {
         var book = new Book();
         book.setIsbn(bookCommand.getIsbn());
         book.setTitle(bookCommand.getTitle());

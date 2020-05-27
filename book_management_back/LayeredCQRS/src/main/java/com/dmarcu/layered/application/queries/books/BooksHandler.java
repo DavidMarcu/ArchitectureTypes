@@ -4,7 +4,7 @@ import com.dmarcu.layered.application.ImageHelper;
 import com.dmarcu.layered.application.exceptions.PageException;
 import com.dmarcu.layered.application.queries.QueryHandler;
 import com.dmarcu.layered.domain.Book;
-import com.dmarcu.layered.domain.BookReadDto;
+import com.dmarcu.layered.domain.BookRead;
 import com.dmarcu.layered.domain.Page;
 import com.dmarcu.layered.domain.repositories.BookRepository;
 import org.springframework.stereotype.Service;
@@ -40,7 +40,7 @@ public class BooksHandler extends AbstractBooksHandler implements QueryHandler<B
             totalBooks = bookRepository.getCount();
             books = bookRepository.getAll(new Page(query.getPage(), pageSize));
         }
-        List<BookReadDto> convertedBooks = books.stream().map(this::convert).collect(Collectors.toList());
+        List<BookRead> convertedBooks = books.stream().map(this::convert).collect(Collectors.toList());
         return getBooksResult(query, convertedBooks, totalBooks);
     }
 
