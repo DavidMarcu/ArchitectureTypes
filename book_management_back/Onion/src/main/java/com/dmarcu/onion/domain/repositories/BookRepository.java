@@ -9,6 +9,10 @@ public interface BookRepository {
 
     List<Book> getAll(Page pagination);
     List<Book> getAllBySearchTerm(Page pagination, String searchTerm);
+    List<Book> getAllByUserId(int userId, Page pagination);
+    List<Book> getAllByUserIdAndSearchTerm(int userId, Page pagination, String searchTerm);
     int getCount();
     int getCountBySearchTerm(String searchTerm);
+    int getCountOfUser(int userId);
+    int getCountOfUserBySearchTerm(int userId, String searchTerm);
 }

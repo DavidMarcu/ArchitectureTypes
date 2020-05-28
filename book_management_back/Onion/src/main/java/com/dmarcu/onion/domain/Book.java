@@ -8,6 +8,6 @@ public class Book {
     private String isbn;
     private String authors;
     private String title;
-    private String cover_image;
+    private String coverImage;
     private String description;
 }

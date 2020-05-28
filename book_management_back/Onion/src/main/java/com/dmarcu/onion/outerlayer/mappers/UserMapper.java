@@ -12,6 +12,7 @@ import java.util.Base64;
 public class UserMapper {
 
     private final BCryptPasswordEncoder passwordEncoder;
+    private static final String AUTHORIZATION_HEADER_PREFIX = "Basic ";
 
     public UserMapper() {
         this.passwordEncoder = new BCryptPasswordEncoder();
@@ -30,6 +31,6 @@ public class UserMapper {
         String credsTobeEncoded = user.getUsername() + ":" + user.getPassword();
         String base64EncodedCredentials = Base64.getEncoder()
                 .encodeToString(credsTobeEncoded.getBytes());
-        return new UserLoginResponse(base64EncodedCredentials);
+        return new UserLoginResponse(AUTHORIZATION_HEADER_PREFIX + base64EncodedCredentials);
     }
 }
