@@ -1,6 +1,5 @@
 package com.dmarcu.onion.outerlayer.dtos;
 
-import com.dmarcu.onion.domain.Book;
 import com.dmarcu.onion.domain.BookRead;
 import lombok.AllArgsConstructor;
 import lombok.Data;

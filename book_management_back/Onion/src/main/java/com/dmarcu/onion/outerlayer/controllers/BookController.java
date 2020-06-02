@@ -2,10 +2,13 @@ package com.dmarcu.onion.outerlayer.controllers;
 
 import com.dmarcu.onion.application.BookService;
 import com.dmarcu.onion.application.UserService;
+import com.dmarcu.onion.application.exceptions.BookNotFoundException;
+import com.dmarcu.onion.application.exceptions.DuplicateBookException;
 import com.dmarcu.onion.application.exceptions.PageException;
-import com.dmarcu.onion.domain.Book;
 import com.dmarcu.onion.domain.BookRead;
 import com.dmarcu.onion.domain.User;
+import com.dmarcu.onion.outerlayer.dtos.BookRequest;
+import com.dmarcu.onion.outerlayer.dtos.BookResponse;
 import com.dmarcu.onion.outerlayer.dtos.BooksResponse;
 import com.dmarcu.onion.outerlayer.dtos.ErrorResponse;
 import com.dmarcu.onion.outerlayer.mappers.BookMapper;
@@ -14,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 
@@ -50,9 +54,33 @@ public class BookController {
         return new ResponseEntity<>(bookMapper.domainToResponse(books, bookCount), HttpStatus.OK);
     }
 
+    @GetMapping(value = "book/{isbn}")
+    public ResponseEntity<BookResponse> getBookWithIsbn(@PathVariable String isbn) {
+        BookRead book = bookService.findBookByIsbn(isbn);
+        return new ResponseEntity<>(bookMapper.domainToResponse(book), HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<BookResponse> insertBook(@Valid @RequestBody BookRequest bookRequest) {
+        String bookIsbn = bookService.insertBook(bookMapper.requestToDomain(bookRequest));
+        var bookResponse = new BookResponse();
+        bookResponse.setIsbn(bookIsbn);
+        return new ResponseEntity<>(bookResponse, HttpStatus.CREATED);
+    }
+
     @ExceptionHandler(PageException.class)
     public ResponseEntity<ErrorResponse> handlePageException(PageException exception) {
         return new ResponseEntity<>(new ErrorResponse(exception.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BookNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleBookNotFoundException(BookNotFoundException exception) {
+        return new ResponseEntity<>(new ErrorResponse(exception.getMessage()), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DuplicateBookException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateBookException(DuplicateBookException exception) {
+        return new ResponseEntity<>(new ErrorResponse(exception.getMessage()), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
 }

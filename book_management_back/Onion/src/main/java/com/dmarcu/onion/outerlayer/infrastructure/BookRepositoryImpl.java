@@ -3,6 +3,8 @@ package com.dmarcu.onion.outerlayer.infrastructure;
 import com.dmarcu.onion.domain.Book;
 import com.dmarcu.onion.domain.Page;
 import com.dmarcu.onion.domain.repositories.BookRepository;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -85,6 +87,32 @@ public class BookRepositoryImpl implements BookRepository {
         Integer count = jdbcTemplate.queryForObject(countQuery,
                 new Object[]{userId, searchTerm, searchTerm}, Integer.class);
         return count != null ? count : 0;
+    }
+
+    @Override
+    public Book getByIsbn(String isbn) {
+        String readQuery = "SELECT isbn, authors, title, cover_image, description FROM books " +
+                "WHERE isbn = ?";
+        try {
+            return jdbcTemplate.queryForObject(readQuery, new Object[]{isbn},
+                    new BeanPropertyRowMapper<>(Book.class));
+        } catch (EmptyResultDataAccessException exception) {
+            return null;
+        }
+    }
+
+    @Override
+    public String add(Book book) {
+        String insertStatement = "INSERT INTO books " +
+                "(isbn, title, authors, year_published, edition_number, cover_image, description) " +
+                "VALUES(?, ?, ?, ?, ?, ?, ?)";
+        try {
+            jdbcTemplate.update(insertStatement, book.getIsbn(), book.getTitle(), book.getAuthors(), book.getYearPublished(),
+                    book.getEditionNumber(), book.getCoverImage(), book.getDescription());
+            return book.getIsbn();
+        } catch (DuplicateKeyException duplicateException) {
+            return null;
+        }
     }
 
     private int getOffset(Page pagination) {

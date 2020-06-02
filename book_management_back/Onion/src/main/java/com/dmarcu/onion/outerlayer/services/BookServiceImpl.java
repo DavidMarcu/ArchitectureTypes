@@ -1,6 +1,8 @@
 package com.dmarcu.onion.outerlayer.services;
 
 import com.dmarcu.onion.application.BookService;
+import com.dmarcu.onion.application.exceptions.BookNotFoundException;
+import com.dmarcu.onion.application.exceptions.DuplicateBookException;
 import com.dmarcu.onion.application.exceptions.PageException;
 import com.dmarcu.onion.domain.Book;
 import com.dmarcu.onion.domain.BookRead;
@@ -22,6 +24,8 @@ public class BookServiceImpl implements BookService {
     private final ImageHelper imageHelper;
     @Value("${books.page_size}")
     private int bookPageSize;
+    @Value("${books.image_default}")
+    private String defaultImagePath;
 
     public BookServiceImpl(BookRepository bookRepository, ImageHelper imageHelper) {
         this.bookRepository = bookRepository;
@@ -68,6 +72,24 @@ public class BookServiceImpl implements BookService {
                                   : bookRepository.getCountOfUserBySearchTerm(user.getId(), searchTerm);
     }
 
+    @Override
+    public BookRead findBookByIsbn(String isbn) {
+        Book book = bookRepository.getByIsbn(isbn);
+        if(book == null) {
+            throw new BookNotFoundException("Book not found");
+        }
+        return convert(book);
+    }
+
+    @Override
+    public String insertBook(BookRead book) {
+       String bookIsbn = bookRepository.add(convert(book));
+       if(bookIsbn == null) {
+           throw new DuplicateBookException("Book already exists");
+       }
+       return bookIsbn;
+    }
+
     private BookRead convert(Book book) {
         List<String> authors = Arrays.asList(book.getAuthors().split(", "));
         String[] splittedFilename = book.getCoverImage().split("\\.");
@@ -77,5 +99,14 @@ public class BookServiceImpl implements BookService {
                 imageHelper.getImageFromPath(book.getCoverImage()),
                 splittedFilename[splittedFilename.length - 1],
                 book.getDescription());
+    }
+
+    private Book convert(BookRead book) {
+        String authors = String.join(", ", book.getAuthors());
+        String imagePath = book.getCoverImage() != null
+                ? imageHelper.uploadImage(book.getCoverImageType(), book.getCoverImage().getBytes())
+                : defaultImagePath;
+        return new Book(book.getIsbn(), authors, book.getTitle(), imagePath,
+                book.getEditionNumber(), book.getDescription());
     }
 }

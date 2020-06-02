@@ -15,4 +15,6 @@ public interface BookRepository {
     int getCountBySearchTerm(String searchTerm);
     int getCountOfUser(int userId);
     int getCountOfUserBySearchTerm(int userId, String searchTerm);
+    Book getByIsbn(String isbn);
+    String add(Book book);
 }

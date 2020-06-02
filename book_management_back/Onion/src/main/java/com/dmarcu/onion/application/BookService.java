@@ -11,4 +11,6 @@ public interface BookService {
     List<BookRead> findAllBooksForUser(int page, String searchTerm, User user);
     int getBookCount(String searchTerm);
     int getBookCountForUser(String searchTerm, User user);
+    BookRead findBookByIsbn(String isbn);
+    String insertBook(BookRead book);
 }
