@@ -2,6 +2,7 @@ package com.dmarcu.layered.application.commands.book;
 
 import com.dmarcu.layered.application.ImageHelper;
 import com.dmarcu.layered.application.commands.CommandHandler;
+import com.dmarcu.layered.application.exceptions.DuplicateBookException;
 import com.dmarcu.layered.domain.Book;
 import com.dmarcu.layered.domain.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +25,10 @@ public class CreateBookHandler implements CommandHandler<CreateBookResult, Creat
     @Override
     public CreateBookResult handle(CreateBookCommand command) {
         Book book = convert(command);
-        bookRepository.add(book);
+        String bookIsbn = bookRepository.add(book);
+        if(bookIsbn == null) {
+            throw new DuplicateBookException("Book already exists");
+        }
         return new CreateBookResult(book.getIsbn());
     }
 

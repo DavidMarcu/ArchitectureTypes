@@ -23,7 +23,8 @@ const store = new Vuex.Store({
       countPerPage: 0
     },
     pageNumberAll: 1,
-    userAuthorization: null
+    userAuthorization: null,
+    notificationObject: null
   },
   mutations: {
     SET_BOOKS(state, response) {
@@ -45,6 +46,9 @@ const store = new Vuex.Store({
     SET_AUTHORIZATION(state, authentication) {
       state.userAuthorization = authentication
     },
+    SET_NOTIFICATION(state, notification) {
+      state.notificationObject = notification
+    }
   },
   actions: {
     fetchBooks(context, payloadObject) {
@@ -65,17 +69,15 @@ const store = new Vuex.Store({
           })
           .catch(error => console.error(error))
     },
-    insertBook(context, book) {
-      bookService.insertBook(book)
-          .then(() => context.dispatch('fetchAllBooks', {page: 1}))
-          .catch(error => console.error("Error on post request: " + error))
-    },
     loginUser(context, user) {
       return new Promise((resolve, reject) =>
         userService.login(user)
             .then(response => {context.commit('SET_AUTHORIZATION', response.data); resolve(response)})
             .catch(error => { reject(error.response) })
-      )}
+      )},
+    emitNotification(context, notification) {
+      context.commit('SET_NOTIFICATION', notification)
+    }
   },
   getters: {
     isLoggedIn(state) {
@@ -95,6 +97,9 @@ const store = new Vuex.Store({
     getAllBooksObject(state) {
       return state.allBooks
     },
+    getNotification(state) {
+      return state.notificationObject
+    }
   },
   modules: {
   }

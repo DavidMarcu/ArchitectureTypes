@@ -1,6 +1,6 @@
 <template>
-  <div class="d-inline-block">
-    <v-dialog @click:outside="onCancel" v-model="dialog" max-width="600px">
+  <div ref="reviewContainer" class="d-inline-block">
+    <v-dialog v-model="dialog" max-width="600px">
       <template v-slot:activator="{ on }">
         <v-btn color="info" outlined v-on="on">
           <span v-if="ownership">EDIT REVIEW</span>
@@ -8,7 +8,7 @@
         </v-btn>
       </template>
       <v-card>
-        <v-form v-model="valid" lazy-validation id="review-form" ref="reviewForm">
+        <v-form v-model="valid" @submit.prevent="" lazy-validation id="review-form" ref="reviewForm">
           <v-card-title>
             <span class="headline">Review</span>
           </v-card-title>
@@ -20,10 +20,10 @@
                 </v-col>
                 <v-col cols="12">
                   <v-rating background-color="warning lighten-3"
-                            color="warning" v-model="formRating" hover></v-rating>
+                            color="warning" v-model="rating" hover></v-rating>
                 </v-col>
                 <v-col cols="12">
-                  <v-textarea label="Review" v-model="formReview"></v-textarea>
+                  <v-textarea label="Review" v-model="review"></v-textarea>
                 </v-col>
               </v-row>
             </v-container>
@@ -48,6 +48,8 @@
 
 <script>
   import reviewService from '@/service/ReviewService.js';
+  import addNotification from "../helpers/NotificationHelper";
+  import notifications from "../helpers/NotificationProperties";
   export default {
     props: {
       isbn: String,
@@ -64,21 +66,19 @@
       return {
         dialog: false,
         valid: false,
-        formRating: this.rating,
-        formReview: this.review
       }
     },
     methods: {
       onAddReview() {
         const reviewBody = {
           isbn: this.isbn,
-          rating: this.formRating,
-          review: this.formReview
+          rating: this.rating,
+          review: this.review
         }
         reviewService.addReviewForBook(reviewBody)
-            .then(response => {
-              this.rating = response.data.rating
-              this.review = response.data.review
+            .then(() => {
+              this.$refs.reviewContainer.appendChild(addNotification(notifications.SUCCESSFUL_REVIEW_ADDED).$el)
+              this.$emit('rated', {review: this.review, rating: this.rating, status: "added"})
               this.dialog = false
             })
             .catch(error => console.error(error))
@@ -86,13 +86,13 @@
       onUpdateReview() {
         const reviewBody = {
           isbn: this.isbn,
-          rating: this.formRating,
-          review: this.formReview
+          rating: this.rating,
+          review: this.review
         }
         reviewService.updateReviewForBook(reviewBody)
-           .then(response => {
-             this.rating = response.data.rating
-             this.review = response.data.review
+           .then(() => {
+             this.$refs.reviewContainer.appendChild(addNotification(notifications.SUCCESSFUL_REVIEW_UPDATED).$el)
+             this.$emit('rated', {review: this.review, rating: this.rating, status: "edited"})
              this.dialog = false
            })
            .catch(error => console.error(error))
@@ -100,15 +100,11 @@
       onDeleteReview() {
         reviewService.deleteReviewForBook(this.isbn)
           .then(() => {
-            this.rating = 0
-            this.review = ""
+            this.$refs.reviewContainer.appendChild(addNotification(notifications.SUCCESSFUL_REVIEW_DELETED).$el)
+            this.$emit('rated', {status: "deleted"})
             this.dialog = false
           })
           .catch(error => console.error(error))
-      },
-      onCancel() {
-        this.formRating = this.rating
-        this.formReview = this.review
       }
     }
   }

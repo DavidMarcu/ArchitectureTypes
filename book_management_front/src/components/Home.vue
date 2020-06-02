@@ -1,5 +1,5 @@
 <template>
-  <div class="h-100">
+  <div ref="container" class="h-100">
     <v-container class="h-100 comp">
       <div class="content row">
         <div class="col-md-12">
@@ -94,6 +94,9 @@
   }
 </style>
 <script>
+    import addNotification from "../helpers/NotificationHelper";
+    import notifications from "../helpers/NotificationProperties";
+
     export default {
       created() {
         const payloadObject = {
@@ -101,6 +104,18 @@
           searchTerm: null
         }
         this.$store.dispatch("fetchBooks", payloadObject)
+      },
+      mounted() {
+        const notification = this.$store.getters.getNotification
+        switch (notification) {
+          case notifications.SUCCESSFUL_BOOK_TO_USER:
+            this.$refs.container.appendChild(addNotification(notifications.SUCCESSFUL_BOOK_TO_USER).$el)
+            break
+          case notifications.SUCCESSFUL_BOOK_REMOVE_FROM_USER:
+            this.$refs.container.appendChild(addNotification(notifications.SUCCESSFUL_BOOK_REMOVE_FROM_USER).$el)
+            break
+        }
+        this.$store.dispatch("emitNotification", null)
       },
       data: () => ({
             searchTerm: "",
@@ -138,6 +153,9 @@
         rightNumber() {
           if(this.books.count === 0) return 0
           else return this.page === this.pageLength ? this.books.count : this.page * this.books.countPerPage
+        },
+        notification() {
+          return this.$store.getters.getNotification
         }
       }
     }

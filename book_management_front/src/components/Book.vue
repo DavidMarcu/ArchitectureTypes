@@ -24,7 +24,8 @@
                          :rating="ownReview !== null ? ownReview.rating : 0"
                          :review="ownReview !== null ? ownReview.review : ''"
                          :ownership="ownReview !== null"
-                         :isbn="this.isbn"></ReviewModal>
+                         :isbn="this.isbn"
+                         @rated="onReviewChange"></ReviewModal>
             <v-btn v-if="hasBook" class="ml-4" color="error" @click="onRemove" outlined tile>REMOVE FROM MY LIBRARY</v-btn>
             <v-btn v-else class="ml-4" @click="onAdd" outlined tile>ADD TO MY LIBRARY</v-btn>
           </div>
@@ -65,6 +66,8 @@
   import bookService from '@/service/BookService.js';
   import reviewService from '@/service/ReviewService.js';
   import ReviewModal from '@/components/ReviewModal.vue';
+  import notifications from "../helpers/NotificationProperties";
+
   export default {
     props: ['isbn'],
     components: {
@@ -113,25 +116,56 @@
     computed: {
       imageSource() {
         return this.book !== null ? `data:image/${this.book.coverImageType};base64,${this.book.coverImage}` :
-            'placeholder'
+            'https://i.imgur.com/J5LVHEL.jpg'
       }
     },
     methods: {
       onRemove() {
         bookService.removeBookForUser(this.book.isbn)
-          .then(() => this.$router.push('/'))
+          .then(() => {
+            this.$router.push('/')
+            this.$store.dispatch('emitNotification', notifications.SUCCESSFUL_BOOK_REMOVE_FROM_USER)
+          })
           .catch(error => console.error(error))
       },
       onAdd() {
         const bookToBeAdded = {isbn: this.book.isbn}
         bookService.addBookForUser(bookToBeAdded)
-          .then(() => this.$router.push('/'))
+          .then(() => {
+            this.$router.push('/')
+            this.$store.dispatch('emitNotification', notifications.SUCCESSFUL_BOOK_TO_USER)
+          })
           .catch(error => console.error(error))
       },
       addReviews() {
           reviewService.getReviewsForBook(this.isbn, ++this.page)
             .then(response => this.reviews = this.reviews.concat(response.data.otherReviews))
             .catch(error => console.error(error))
+      },
+      onReviewChange(newRating) {
+        switch (newRating.status) {
+          case "edited":
+            this.rating = (this.rating + newRating.rating - this.ownReview.rating) / this.numberOfReviews;
+            this.ownReview = {
+              rating: newRating.rating,
+              review: newRating.review
+            }
+            break
+          case "deleted":
+            this.numberOfReviews--;
+            this.rating = this.numberOfReviews > 0 ? (this.rating - this.ownReview.rating) / this.numberOfReviews : 0;
+            this.ownReview = null
+            break
+          case "added":
+            this.numberOfReviews++;
+            this.rating = (this.rating + newRating.rating) / this.numberOfReviews
+            this.ownReview = {
+              rating: newRating.rating,
+              review: newRating.review
+            }
+            break
+        }
+        console.log(newRating)
       }
     }
   }

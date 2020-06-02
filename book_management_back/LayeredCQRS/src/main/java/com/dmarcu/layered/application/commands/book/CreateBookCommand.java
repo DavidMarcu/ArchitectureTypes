@@ -17,7 +17,7 @@ public class CreateBookCommand implements Command<CreateBookResult> {
     @NotEmpty
     private List<String> authors;
     private byte[] coverImage;
-    @Pattern(regexp = "jpeg|jpg|png", flags = Pattern.Flag.CASE_INSENSITIVE, message = "image type not supported")
+    @Pattern(regexp = "jpg|png", flags = Pattern.Flag.CASE_INSENSITIVE, message = "image type not supported")
     private String coverImageType;
     private String description;
     private short yearPublished;

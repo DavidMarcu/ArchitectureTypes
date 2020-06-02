@@ -3,6 +3,7 @@ package com.dmarcu.layered.presentaion;
 import com.dmarcu.layered.application.Bus;
 import com.dmarcu.layered.application.commands.book.*;
 import com.dmarcu.layered.application.exceptions.BookNotFoundException;
+import com.dmarcu.layered.application.exceptions.DuplicateBookException;
 import com.dmarcu.layered.application.exceptions.OwnershipException;
 import com.dmarcu.layered.application.exceptions.PageException;
 import com.dmarcu.layered.application.queries.books.*;
@@ -82,5 +83,10 @@ public class BookController {
     @ExceptionHandler(OwnershipException.class)
     public ResponseEntity<Void> handleOwnershipException() {
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DuplicateBookException.class)
+    public ResponseEntity<Error> handleDuplicateBookException(DuplicateBookException exception) {
+        return new ResponseEntity<>(new Error(exception.getMessage()), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }

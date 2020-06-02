@@ -5,6 +5,7 @@ import com.dmarcu.layered.domain.Book;
 import com.dmarcu.layered.domain.Page;
 import com.dmarcu.layered.domain.repositories.BookRepository;
 import com.dmarcu.layered.domain.BookUserCongregate;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -122,12 +123,17 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
-    public void add(Book book) {
+    public String add(Book book) {
         String insertStatement = "INSERT INTO books " +
                 "(isbn, title, authors, year_published, edition_number, cover_image, description) " +
                 "VALUES(?, ?, ?, ?, ?, ?, ?)";
-        jdbcTemplate.update(insertStatement, book.getIsbn(), book.getTitle(), book.getAuthors(), book.getYearPublished(),
-                book.getEditionNumber(), book.getCoverImage(), book.getDescription());
+        try {
+            jdbcTemplate.update(insertStatement, book.getIsbn(), book.getTitle(), book.getAuthors(), book.getYearPublished(),
+                    book.getEditionNumber(), book.getCoverImage(), book.getDescription());
+            return book.getIsbn();
+        } catch (DuplicateKeyException duplicateException) {
+            return null;
+        }
     }
 
     private int getOffset(Page pagination) {

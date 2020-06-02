@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div ref="newBookContainer">
     <v-dialog v-model="dialog" persistent max-width="600px">
       <template v-slot:activator="{ on }">
         <v-btn color="success" v-on="on">
@@ -67,6 +67,10 @@
 </template>
 
 <script>
+  import bookService from "../service/BookService";
+  import addNotification from "../helpers/NotificationHelper";
+  import notifications from "../helpers/NotificationProperties";
+
   export default {
     data() {
       return {
@@ -109,13 +113,24 @@
             book.coverImage = base64FunctionResult.fileAsBase64
             const splitIndex = book.coverImage.indexOf("base64")
             book.coverImage = base64FunctionResult.fileAsBase64.substr(splitIndex + 7)
-            if (base64FunctionResult === "image/jpeg")
+            if (base64FunctionResult.filetype === "image/jpeg")
               book.coverImageType = "jpg"
-            else if (base64FunctionResult === "image/png")
+            else if (base64FunctionResult.filetype === "image/png")
               book.coverImageType = "png"
           }
-          this.dialog = false
-          await this.$store.dispatch("insertBook", book)
+          bookService.insertBook(book)
+              .then(() => {
+                this.$refs.newBookContainer.appendChild(addNotification(notifications.SUCCESSFUL_BOOK).$el)
+                this.$store.dispatch('fetchAllBooks', {page: 1})
+                this.dialog = false
+              })
+              .catch(error => {
+                if(error.response.status === 422) {
+                    this.$refs.newBookContainer.appendChild(addNotification(notifications.DUPLICATE_BOOK).$el)
+                } else {
+                  console.error(error)
+                }
+              })
         }
       },
       onClose() {

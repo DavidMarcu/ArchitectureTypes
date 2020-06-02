@@ -5,7 +5,7 @@
       :timeout="4000"
       :color="type">
     <slot></slot>
-    <v-btn dark text @click="snackbar = false">
+    <v-btn text @click="snackbar = false">
       Close
     </v-btn>
   </v-snackbar>

@@ -20,5 +20,5 @@ public interface BookRepository {
     int getCountOfUserBySearchTerm(int userId, String searchTerm);
     void deleteByUsedId(BookUserCongregate bookUserCongregate);
     void addBookToUser(BookUserCongregate bookUserCongregate);
-    void add(Book book);
+    String add(Book book);
 }

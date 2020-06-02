@@ -28,14 +28,10 @@ public abstract class AbstractBooksHandler {
         if(totalBooks > 0 && currentPage > lastPage) {
             throw new PageException("Page not available");
         }
-        int prevPage = currentPage > 1 ? currentPage - 1 : currentPage;
-        int nextPage = currentPage < lastPage ? currentPage + 1 : currentPage;
 
         return BooksResult.builder()
                 .books(convertedBooks)
                 .lastPage(lastPage)
-                .prevPage(prevPage)
-                .nextPage(nextPage)
                 .booksPerPage(pageSize)
                 .totalBooks(totalBooks)
                 .build();
