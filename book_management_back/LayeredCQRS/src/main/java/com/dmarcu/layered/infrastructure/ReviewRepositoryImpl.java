@@ -80,7 +80,6 @@ public class ReviewRepositoryImpl implements ReviewRepository {
         }
     }
 
-
     @Override
     public void delete(BookUserCongregate congregate) {
         String deleteStatement = "DELETE FROM reviews WHERE id = (SELECT reviewID FROM " +
