@@ -3,11 +3,9 @@ package com.dmarcu.onion.outerlayer.services;
 import com.dmarcu.onion.application.BookService;
 import com.dmarcu.onion.application.exceptions.BookNotFoundException;
 import com.dmarcu.onion.application.exceptions.DuplicateBookException;
+import com.dmarcu.onion.application.exceptions.OwnershipException;
 import com.dmarcu.onion.application.exceptions.PageException;
-import com.dmarcu.onion.domain.Book;
-import com.dmarcu.onion.domain.BookRead;
-import com.dmarcu.onion.domain.Page;
-import com.dmarcu.onion.domain.User;
+import com.dmarcu.onion.domain.*;
 import com.dmarcu.onion.domain.repositories.BookRepository;
 import com.dmarcu.onion.outerlayer.helpers.ImageHelper;
 import org.springframework.beans.factory.annotation.Value;
@@ -88,6 +86,25 @@ public class BookServiceImpl implements BookService {
            throw new DuplicateBookException("Book already exists");
        }
        return bookIsbn;
+    }
+
+    @Override
+    public String addBookToUser(BookUserCongregate bookUserCongregate) {
+        bookRepository.addBookToUser(bookUserCongregate);
+        return bookUserCongregate.getIsbn();
+    }
+
+    @Override
+    public void deleteBookForUser(BookUserCongregate bookUserCongregate) {
+        bookRepository.deleteByUsedId(bookUserCongregate);
+    }
+
+    @Override
+    public void isBookOwned(BookUserCongregate bookUserCongregate) {
+        int count = bookRepository.getCountOfUserByIsbn(bookUserCongregate);
+        if(count < 1) {
+            throw new OwnershipException("Book is not owned");
+        }
     }
 
     private BookRead convert(Book book) {

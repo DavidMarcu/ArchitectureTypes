@@ -1,6 +1,7 @@
 package com.dmarcu.onion.outerlayer.infrastructure;
 
 import com.dmarcu.onion.domain.Book;
+import com.dmarcu.onion.domain.BookUserCongregate;
 import com.dmarcu.onion.domain.Page;
 import com.dmarcu.onion.domain.repositories.BookRepository;
 import org.springframework.dao.DuplicateKeyException;
@@ -102,6 +103,14 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
+    public int getCountOfUserByIsbn(BookUserCongregate congregate) {
+        String countQuery = "SELECT count(1) FROM users_books WHERE userID = ? AND bookID = ?";
+        Integer count = jdbcTemplate.queryForObject(countQuery, new Object[]{congregate.getUserId()
+                , congregate.getIsbn()}, Integer.class);
+        return count != null ? count : 0;
+    }
+
+    @Override
     public String add(Book book) {
         String insertStatement = "INSERT INTO books " +
                 "(isbn, title, authors, year_published, edition_number, cover_image, description) " +
@@ -113,6 +122,18 @@ public class BookRepositoryImpl implements BookRepository {
         } catch (DuplicateKeyException duplicateException) {
             return null;
         }
+    }
+
+    @Override
+    public void addBookToUser(BookUserCongregate bookUserCongregate) {
+        String insertStatement = "INSERT INTO users_books (bookID, userID) VALUES (?, ?)";
+        jdbcTemplate.update(insertStatement, bookUserCongregate.getIsbn(), bookUserCongregate.getUserId());
+    }
+
+    @Override
+    public void deleteByUsedId(BookUserCongregate bookUserCongregate) {
+        String deleteStatement = "DELETE FROM users_books WHERE bookID = ? AND userID = ?";
+        jdbcTemplate.update(deleteStatement, bookUserCongregate.getIsbn(), bookUserCongregate.getUserId());
     }
 
     private int getOffset(Page pagination) {

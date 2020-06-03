@@ -1,8 +1,10 @@
 package com.dmarcu.onion.domain;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class Book {
 
     private String isbn;

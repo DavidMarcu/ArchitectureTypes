@@ -1,6 +1,7 @@
 package com.dmarcu.onion.application;
 
 import com.dmarcu.onion.domain.BookRead;
+import com.dmarcu.onion.domain.BookUserCongregate;
 import com.dmarcu.onion.domain.User;
 
 import java.util.List;
@@ -13,4 +14,7 @@ public interface BookService {
     int getBookCountForUser(String searchTerm, User user);
     BookRead findBookByIsbn(String isbn);
     String insertBook(BookRead book);
+    String addBookToUser(BookUserCongregate bookUserCongregate);
+    void deleteBookForUser(BookUserCongregate bookUserCongregate);
+    void isBookOwned(BookUserCongregate bookUserCongregate);
 }
