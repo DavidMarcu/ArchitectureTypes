@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
@@ -59,13 +58,13 @@ public class ReviewServiceImpl implements ReviewService {
         List<Integer> ratings = reviewRepository.ratingsForBook(congregate.getIsbn());
         int count = ratings.size();
         if(count > 0) {
-            Double ratingsAverage = ratings.stream()
-                    .collect(Collectors.averagingDouble(Double::valueOf));
+            long ratingsSum = ratings.stream()
+                    .mapToLong(Integer::longValue).sum();
             List<ReviewUser> reviewUsers = reviewRepository.getForBook(congregate, pagination);
             ReviewUser loggedUserReview = reviewRepository.getOwnForBook(congregate);
             return Reviews.builder().reviewCount(count)
                     .lastPage(getLastPage(count))
-                    .ratingAvg(ratingsAverage.floatValue())
+                    .ratingSum(ratingsSum)
                     .otherReviews(reviewUsers)
                     .ownReview(loggedUserReview);
         } else {

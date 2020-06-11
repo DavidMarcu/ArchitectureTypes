@@ -95,7 +95,7 @@
           this.reviews = response.data.otherReviews
           this.ownReview = response.data.ownReview
           this.numberOfReviews = response.data.reviewCount
-          this.rating = response.data.ratingAvg
+          this.ratingSum = response.data.ratingSum
           this.lastPage = response.data.lastPage
         })
         .catch(error => console.error(error))
@@ -103,7 +103,7 @@
     data() {
       return {
         book: null,
-        rating: 0,
+        ratingSum: 0,
         item: 5,
         reviews: [],
         numberOfReviews: 0,
@@ -117,6 +117,9 @@
       imageSource() {
         return this.book !== null ? `data:image/${this.book.coverImageType};base64,${this.book.coverImage}` :
             'https://i.imgur.com/J5LVHEL.jpg'
+      },
+      rating() {
+        return this.numberOfReviews > 0 ? this.ratingSum / this.numberOfReviews : 0
       }
     },
     methods: {
@@ -145,7 +148,7 @@
       onReviewChange(newRating) {
         switch (newRating.status) {
           case "edited":
-            this.rating = (this.rating + newRating.rating - this.ownReview.rating) / this.numberOfReviews;
+            this.ratingSum = this.ratingSum + newRating.rating - this.ownReview.rating
             this.ownReview = {
               rating: newRating.rating,
               review: newRating.review
@@ -153,19 +156,18 @@
             break
           case "deleted":
             this.numberOfReviews--;
-            this.rating = this.numberOfReviews > 0 ? (this.rating - this.ownReview.rating) / this.numberOfReviews : 0;
+            this.ratingSum -= this.ownReview.rating
             this.ownReview = null
             break
           case "added":
             this.numberOfReviews++;
-            this.rating = (this.rating + newRating.rating) / this.numberOfReviews
+            this.ratingSum += newRating.rating
             this.ownReview = {
               rating: newRating.rating,
               review: newRating.review
             }
             break
         }
-        console.log(newRating)
       }
     }
   }

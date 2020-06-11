@@ -1,6 +1,5 @@
 package com.dmarcu.onion.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,7 +11,7 @@ public class Reviews {
 
     private int reviewCount;
     private int lastPage;
-    private float ratingAvg;
+    private long ratingSum;
     private List<ReviewUser> otherReviews;
     private ReviewUser ownReview;
 

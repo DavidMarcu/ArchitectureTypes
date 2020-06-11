@@ -10,7 +10,7 @@ import java.util.List;
 public class ReviewsResponse {
     private int reviewCount;
     private int lastPage;
-    private float ratingAvg;
+    private long ratingSum;
     private List<ReviewDetails> otherReviews;
     private ReviewDetails ownReview;
 }

@@ -49,13 +49,13 @@ public class ReviewsHandler implements QueryHandler<ReviewsResult, ReviewsQuery>
         List<Integer> ratings = reviewRepository.ratingsForBook(bookId);
         int count = ratings.size();
         if(count > 0) {
-            Double ratingsAverage = ratings.stream()
-                    .collect(Collectors.averagingDouble(Double::valueOf));
+            long ratingsSum = ratings.stream()
+                    .mapToLong(Integer::longValue).sum();
             List<ReviewUser> reviewUsers = reviewRepository.getForBook(congregate, pagination);
             ReviewUser loggedUserReview = reviewRepository.getOwnForBook(congregate);
             return ReviewsResult.builder().reviewCount(count)
                     .lastPage(getLastPage(count))
-                    .ratingAvg(ratingsAverage.floatValue())
+                    .ratingSum(ratingsSum)
                     .otherReviews(reviewUsers)
                     .ownReview(loggedUserReview);
         } else {

@@ -12,7 +12,7 @@ public class ReviewsResult {
 
   private int reviewCount;
   private int lastPage;
-  private float ratingAvg;
+  private float ratingSum;
   private List<ReviewUser> otherReviews;
   private ReviewUser ownReview;
 

@@ -24,7 +24,7 @@ public class ReviewMapper {
 
     public ReviewsResponse domainToResponse(Reviews reviews) {
         var ownReview = reviews.getOwnReview() != null ? convert(reviews.getOwnReview()) : null;
-        return new ReviewsResponse(reviews.getReviewCount(), reviews.getLastPage(), reviews.getRatingAvg(),
+        return new ReviewsResponse(reviews.getReviewCount(), reviews.getLastPage(), reviews.getRatingSum(),
                 reviews.getOtherReviews().stream().map(this::convert).collect(Collectors.toList()),
                 ownReview);
     }
