@@ -1,2 +1,2 @@
 # ArchitectureTypes
-Application prototypes using 3 different architectures: Hexagonal, Onion and CQRS.
+Application prototypes using 2 different architectures: Onion and CQRS.
